@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
 #define charMax 50 +2 // Quantidade máxima de caracteres de uma string, o +2 é referente ao \n e \0.
 
 
@@ -21,10 +22,16 @@ void printTentativas(short int tentativa, short int tentativasTotal){
 
 int main(){
 
-    short int tentativasTotal = 5;
+    srand(time(NULL));
+
+    short int tentativasTotal = 10;
     short int tentativa = tentativasTotal;
 
-    char palavra[] = "CARRO";
+    char *lista[] = {
+    "ACEITAR", "AJUSTAR", "ANALISAR", "APLICAR", "APONTAR", "APRENDER", "APROVAR", "ARMAZENAR", "ARRASTAR", "ASSINAR", "ASSOCIAR", "ASSUMIR", "ATUALIZAR", "AUTENTICAR", "AUTORIZAR", "BALANCEAR", "BLOQUEAR", "CALIBRAR", "CANCELAR", "CAPTURAR", "CARREGAR", "CELEBRAR", "CLASSIFICAR", "CLONAR", "COBRIR", "COLIDIR" "COMANDAR", "COMENTAR", "COMERCIALIZAR", "COMPARAR", "COMPETIR", "COMPLETAR", "COMPLICAR", "COMUNICAR", "CONCEDER", "CONFIRMAR", "CONGELAR", "CONQUISTAR", "CONSERVAR", "CONSIDERAR", "CONSOLIDAR", "CONSTRUIR", "CONSULTAR", "CONTAR", "CONTINUAR", "CONTRATAR", "CONTROLAR", "CONVERTER", "COORDENAR", "CORRIGIR", "CRIAR", "CRITICAR", "DEFENDER", "DEFINIR", "DELEGAR", "DELETAR", "DEMONSTRAR", "DENUNCIAR", "DEPOSITAR", "DESCANSAR", "DESCREVER", "DESENHAR", "DESENVOLVER", "DESMONTAR", "DESTACAR", "DETECTAR", "DETERMINAR", "DEVOLVER", "DIAGNOSTICAR", "DIFERENCIAR", "DIMINUIR", "DIRECIONAR", "DISCUTIR", "DISPARAR", "DISPENSAR", "DISPOR", "DISTINGUIR", "DISTRIBUIR", "DIVERTIR", "DOMINAR", "DURAR", "EDITAR", "ELEVAR", "ELIMINAR", "EMITIR", "ENCERRAR", "ENCONTRAR", "ENDEREÇAR", "ENGAJAR", "ENRIQUECER", "ENSINAR", "ENTENDER", "ENTRAR", "ENTREGAR", "ENUMERAR", "EQUIPAR", "ERGUER", "ESCALAR", "ESCOLHER", "ESCREVER", "ESPECIFICAR", "ESPERAR", "ESTABELECER", "ESTIMAR", "ESTUDAR", "EVITAR", "EVOLUIR", "EXCEDER", "EXCLUIR", "EXECUTAR"
+};
+    char palavra[charMax];
+    strcpy(palavra, lista[rand() % 100]);
     short int palavraTam = strlen(palavra);
 
     char palavraMontagem[charMax];
@@ -76,14 +83,15 @@ int main(){
         system("CLS");
 
         if(strcmp(palavra, user) == 0){
-            printf("Acertou!\n");
+            printf("Acertou!\n\n");
             break;
         }
 
         tentativa--;
 
         if(tentativa == 0){
-            printf("Perdeu! Usou todas as suas tentativas!\n\n");
+            printf("Perdeu! Usou todas as suas tentativas!\n");
+            printf("A palavra era: %s\n\n", palavra);
             break;
         }
 
