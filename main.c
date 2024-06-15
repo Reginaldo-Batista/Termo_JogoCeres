@@ -42,18 +42,18 @@ int main(){
         "CRIVO", "DENTE", "DOSEI", "DUELO", "EIXOS", "ELEVA","CARRO","ESTAR", NULL
     };
 
+    unsigned short int FimDoJogo = 0; //FimDoJogo recebe inicialmente "falso"
     unsigned short int listaTamanho = fContLista(lista);
     unsigned short int tentativasTotais, tentativasRestantesDoPlayer;
-    unsigned short int FimDoJogo = 0; //FimDoJogo recebe inicialmente "falso"
-    char continuarJogo[2];
     char palavraSorteada[charMax];
     char palavraSorteadaMontagem[charMax];
+    char RespostaDoJogador[charMax];
+    char continuarJogo[2];
     char letrasCorretasDoJogador[charMax];
     char letrasIncorretasDoJogador[charMax];
     unsigned short int auxLetrasCorretas;
     unsigned short int auxLetrasIncorretas;
-    char RespostaDoJogador[charMax];
-    unsigned int score = 0;
+    unsigned int scoreTotal = 0;
     unsigned int scorePorTentativa = 20; // Se houver necessidade de mudar a quantidade de pontos por tentativa
 
     do{ //(re)Iniciando o jogo do zero
@@ -69,7 +69,7 @@ int main(){
         // Reiniciando a maioria das variáveis, exceto 'palavraTam'
         auxLetrasCorretas = 0;
         auxLetrasIncorretas = 0;
-        tentativasTotais = 6;
+        tentativasTotais = 6; // Se quiser alterar o número de tentativas total é nesta parte
         tentativasRestantesDoPlayer = tentativasTotais;
 
         // É nesta parte do código que a palavra será sorteada
@@ -116,8 +116,8 @@ int main(){
                 printf("Acertou!\n");
                 printf("A palavra era: %s\n\n", palavraSorteada);
                 printf("Ganhou %d pontos!\n\n", tentativasRestantesDoPlayer * scorePorTentativa);
-                score += tentativasRestantesDoPlayer * scorePorTentativa;
-                printf("Seu score no momento: %d\n\n", score);
+                scoreTotal += tentativasRestantesDoPlayer * scorePorTentativa;
+                printf("Seu score no momento: %d\n\n", scoreTotal);
                 break;
             }
 
@@ -126,8 +126,8 @@ int main(){
             if(tentativasRestantesDoPlayer == 0){
                 printf("Perdeu! Usou todas as suas tentativas!\n");
                 printf("A palavra era: %s\n\n", palavraSorteada);
-                printf("Seu score total foi: %d\n\n", score);
-                score = 0; // O jogador perde todos os pontos após perder
+                printf("Seu score total foi: %d\n\n", scoreTotal);
+                scoreTotal = 0; // O jogador perde todos os pontos após perder
                 break;
             }
 
