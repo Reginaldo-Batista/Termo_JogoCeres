@@ -7,7 +7,7 @@
 
 
 //A função remove o '\n' e deixa todos os caracteres maiúsculos.
-void adjustString(char *string){
+void fAdjustString(char *string){
     fgets(string, charMax, stdin);
     string[strlen(string) - 1] = '\0';
     for(int i = 0; string[i] != '\0'; i++){
@@ -16,8 +16,17 @@ void adjustString(char *string){
 }
 
 //Função para imprimir o número de tentativas restantes
-void printTentativas(short int *tentativa, short int *tentativasTotal){
-    printf("Tentativas restantes: %d/%d\n\n", *tentativa, *tentativasTotal);
+void fPrintTentativas(unsigned short int *tentativasRestantesDoPlayer, unsigned short int *tentativasTotais){
+    printf("Tentativas restantes: %d/%d\n\n", *tentativasRestantesDoPlayer, *tentativasTotais);
+}
+
+//Função que conta automaticamente a quantidade de palavras na lista, sem a necessidade de intervenção do programador
+int fContLista(char **lista){
+    int cont = 0;
+    for(int i = 0; lista[i] != NULL; i++){
+        cont++;
+    }
+    return cont;
 }
 
 int main(){
@@ -25,115 +34,117 @@ int main(){
     srand(time(NULL));
 
     char *lista[] = {
-    "ACEITAR", "AJUSTAR", "ANALISAR", "APLICAR", "APONTAR", "APRENDER", "APROVAR", "ARMAZENAR", "ARRASTAR", "ASSINAR", "ASSOCIAR", "ASSUMIR", "ATUALIZAR", "AUTENTICAR", "AUTORIZAR", "BALANCEAR", "BLOQUEAR", "CALIBRAR", "CANCELAR", "CAPTURAR", "CARREGAR", "CELEBRAR", "CLASSIFICAR", "CLONAR", "COBRIR", "COLIDIR" "COMANDAR", "COMENTAR", "COMERCIALIZAR", "COMPARAR", "COMPETIR", "COMPLETAR", "COMPLICAR", "COMUNICAR", "CONCEDER", "CONFIRMAR", "CONGELAR", "CONQUISTAR", "CONSERVAR", "CONSIDERAR", "CONSOLIDAR", "CONSTRUIR", "CONSULTAR", "CONTAR", "CONTINUAR", "CONTRATAR", "CONTROLAR", "CONVERTER", "COORDENAR", "CORRIGIR", "CRIAR", "CRITICAR", "DEFENDER", "DEFINIR", "DELEGAR", "DELETAR", "DEMONSTRAR", "DENUNCIAR", "DEPOSITAR", "DESCANSAR", "DESCREVER", "DESENHAR", "DESENVOLVER", "DESMONTAR", "DESTACAR", "DETECTAR", "DETERMINAR", "DEVOLVER", "DIAGNOSTICAR", "DIFERENCIAR", "DIMINUIR", "DIRECIONAR", "DISCUTIR", "DISPARAR", "DISPENSAR", "DISPOR", "DISTINGUIR", "DISTRIBUIR", "DIVERTIR", "DOMINAR", "DURAR", "EDITAR", "ELEVAR", "ELIMINAR", "EMITIR", "ENCERRAR", "ENCONTRAR", "ENDEREÇAR", "ENGAJAR", "ENRIQUECER", "ENSINAR", "ENTENDER", "ENTRAR", "ENTREGAR", "ENUMERAR", "EQUIPAR", "ERGUER", "ESCALAR", "ESCOLHER", "ESCREVER", "ESPECIFICAR", "ESPERAR", "ESTABELECER", "ESTIMAR", "ESTUDAR", "EVITAR", "EVOLUIR", "EXCEDER", "EXCLUIR", "EXECUTAR"
-};
+        "SALVO", "TREVO", "MANGA", "LIMPO", "TENSO", "FAROL", "PLANO", "GRUPO",
+        "MARCO", "SOMAR", "PONTO", "SENHA", "FALSO", "LIVRO", "CASAR", "PESAR",
+        "NORMA", "FORMA", "SIGLA", "TEMPO", "FESTA", "FRUTA", "FLORA", "FAUNA",
+        "ETAPA", "ENTRE", "CORTE", "COSTA", "BOLSA", "BLOCO", "ATRIZ", "ARENA",
+        "ALGUM", "ACASO", "ABRIR", "VASCO", "CARGO", "CINTO", "CLUBE", "CREME",
+        "CRIVO", "DENTE", "DOSEI", "DUELO", "EIXOS", "ELEVA","CARRO","ESTAR", NULL
+    };
 
-    short int tentativasTotal, tentativa;
-    short int fim = 0; //Fim recebe inicialmente "falso"
-    char continuar[2];
-    char palavra[charMax];
-    short int palavraTam;
-    char palavraMontagem[charMax];
-    char letrasCorretas[charMax];
-    char letrasIncorretas[charMax];
-    short int auxCorreta;
-    short int auxIncorreta;
-    char user[charMax];
+    unsigned short int listaTamanho = fContLista(lista);
+    unsigned short int tentativasTotais, tentativasRestantesDoPlayer;
+    unsigned short int FimDoJogo = 0; //FimDoJogo recebe inicialmente "falso"
+    char continuarJogo[2];
+    char palavraSorteada[charMax];
+    char palavraSorteadaMontagem[charMax];
+    char letrasCorretasDoJogador[charMax];
+    char letrasIncorretasDoJogador[charMax];
+    unsigned short int auxLetrasCorretas;
+    unsigned short int auxLetrasIncorretas;
+    char RespostaDoJogador[charMax];
     unsigned int score = 0;
-    unsigned int pontoPorTentativa = 20; // Se houver necessidade de mudar a quantidade de pontos por tentativa
+    unsigned int scorePorTentativa = 20; // Se houver necessidade de mudar a quantidade de pontos por tentativa
 
     do{ //(re)Iniciando o jogo do zero
 
         system("CLS");
 
-        for(int i = 0; i < charMax; i++){ // Limpando todos os vetores de char, exceto 'palavra'
-            letrasCorretas[i] = '\0';
-            letrasIncorretas[i] = '\0';
-            palavraMontagem[i] = '\0';
-            user[i] = '\0';
+        for(int i = 0; i < charMax; i++){ // Limpando todos os vetores de char, exceto 'palavraSorteada'
+            letrasCorretasDoJogador[i] = '\0';
+            letrasIncorretasDoJogador[i] = '\0';
+            RespostaDoJogador[i] = '\0';
         }
 
         // Reiniciando a maioria das variáveis, exceto 'palavraTam'
-        auxCorreta = 0;
-        auxIncorreta = 0;
-        tentativasTotal = 6;
-        tentativa = tentativasTotal;
+        auxLetrasCorretas = 0;
+        auxLetrasIncorretas = 0;
+        tentativasTotais = 6;
+        tentativasRestantesDoPlayer = tentativasTotais;
 
-        // É nesta parte do código em que haverá a escolha da palavra e o cálculo do tamanho desta
-        strcpy(palavra, lista[rand() % 109]);
-        palavraTam = strlen(palavra);
+        // É nesta parte do código que a palavra será sorteada
+        strcpy(palavraSorteada, lista[rand() % listaTamanho]);
+        strcpy(palavraSorteadaMontagem, "-----");
 
-        for(int i = 0; i < palavraTam; i++){
-            palavraMontagem[i] = '-';
-        }
+        do{ // Onde o jogador vai tentando acertar
 
-        do{ //Onde o jogador vai tentando acertar
+            fPrintTentativas(&tentativasRestantesDoPlayer, &tentativasTotais);
 
-            printTentativas(&tentativa, &tentativasTotal);
-
-            printf("A palavra tem %d letras:\n", palavraTam);
-            for(int j = 0; palavra[j] != '\0'; j++){
-                if(user[j] == palavra[j]){
-                    palavraMontagem[j] = palavra[j];
+            printf("A palavra tem 5 letras:\n");
+            for(int j = 0; palavraSorteada[j] != '\0'; j++){
+                if(RespostaDoJogador[j] == palavraSorteada[j]){
+                    palavraSorteadaMontagem[j] = palavraSorteada[j];
                 }
                 //Verificando se existe o caractere na palavra, e se a lista já existe na lista
-                if(strchr(palavra, user[j]) != NULL && strchr(letrasCorretas, user[j]) == NULL){
-                    letrasCorretas[auxCorreta] = user[j];
-                    letrasCorretas[auxCorreta + 1] = ' '; // Caractere separador
-                    auxCorreta += 2;
+                if(strchr(palavraSorteada, RespostaDoJogador[j]) != NULL && strchr(letrasCorretasDoJogador, RespostaDoJogador[j]) == NULL){
+                    letrasCorretasDoJogador[auxLetrasCorretas] = RespostaDoJogador[j];
+                    letrasCorretasDoJogador[auxLetrasCorretas + 1] = ' '; // Caractere separador
+                    auxLetrasCorretas += 2;
                 }
                 //Verificando se a existência do caractere na palavra é falso, e se já existe na lista
-                else if(strchr(palavra, user[j]) == NULL && strchr(letrasIncorretas, user[j]) == NULL){
-                    letrasIncorretas[auxIncorreta] = user[j];
-                    letrasIncorretas[auxIncorreta + 1] = ' '; // Caractere separador
-                    auxIncorreta += 2;
+                else if(strchr(palavraSorteada, RespostaDoJogador[j]) == NULL && strchr(letrasIncorretasDoJogador, RespostaDoJogador[j]) == NULL){
+
+                    letrasIncorretasDoJogador[auxLetrasIncorretas] = RespostaDoJogador[j];
+                    letrasIncorretasDoJogador[auxLetrasIncorretas + 1] = ' '; // Caractere separador
+                    auxLetrasIncorretas += 2;
                 }
             }
-            printf("%s", palavraMontagem);
+            printf("%s", palavraSorteadaMontagem);
 
-            printf("\n\nLetras corretas: %s\n", letrasCorretas);
+            printf("\n\nLetras corretas: %s\n", letrasCorretasDoJogador);
 
-            printf("Letras incorretas: %s", letrasIncorretas);
+            printf("Letras incorretas: %s", letrasIncorretasDoJogador);
 
             // Local onde o usuário digitará seu palpite
             printf("\n\nSua resposta: ");
-            adjustString(user);
+            fAdjustString(RespostaDoJogador);
 
             system("CLS");
 
-            if(strcmp(palavra, user) == 0){
+            // Verificando se a resposta do jogador é igual à palavra sorteada
+            if(strcmp(palavraSorteada, RespostaDoJogador) == 0){
                 printf("Acertou!\n");
-                printf("A palavra era: %s\n\n", palavra);
-                printf("Ganhou %d pontos!\n\n", tentativa * pontoPorTentativa);
-                score += tentativa * pontoPorTentativa;
+                printf("A palavra era: %s\n\n", palavraSorteada);
+                printf("Ganhou %d pontos!\n\n", tentativasRestantesDoPlayer * scorePorTentativa);
+                score += tentativasRestantesDoPlayer * scorePorTentativa;
                 printf("Seu score no momento: %d\n\n", score);
                 break;
             }
 
-            tentativa--;
+            tentativasRestantesDoPlayer--;
 
-            if(tentativa == 0){
+            if(tentativasRestantesDoPlayer == 0){
                 printf("Perdeu! Usou todas as suas tentativas!\n");
-                printf("A palavra era: %s\n\n", palavra);
+                printf("A palavra era: %s\n\n", palavraSorteada);
                 printf("Seu score total foi: %d\n\n", score);
-                score = 0;
+                score = 0; // O jogador perde todos os pontos após perder
                 break;
             }
 
-        }while(tentativa > 0);
+        }while(tentativasRestantesDoPlayer > 0);
 
         do{
             printf("Deseja continuar? [S] ou [N]: ");
-            adjustString(continuar);
-            if(continuar[0] == 'N'){
-                fim = 1;
+            fAdjustString(continuarJogo);
+            if(continuarJogo[0] == 'N'){
+                FimDoJogo = 1; // Fim do jogo recebe verdadeiro
                 break;
             }
-            else if(continuar[0] != 'S')
+            else if(continuarJogo[0] != 'S')
                 printf("Insira um comando valido!\n\n");
-        }while(continuar[0] != 'S');
+        }while(continuarJogo[0] != 'S');
 
-    }while(fim != 1);
+    }while(FimDoJogo == 0);
 
     system("CLS");
 
