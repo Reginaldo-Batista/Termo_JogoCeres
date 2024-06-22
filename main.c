@@ -34,12 +34,13 @@ int main(){
     srand(time(NULL));
 
     char *lista[] = {
-        "SALVO", "TREVO", "MANGA", "LIMPO", "TENSO", "FAROL", "PLANO", "GRUPO",
+        "SALVO", "TREVO", "MANTO", "LIMPO", "TENSO", "FAROL", "PLANO", "GRUPO",
         "MARCO", "SOMAR", "PONTO", "SENHA", "FALSO", "LIVRO", "CASAR", "PESAR",
-        "NORMA", "FORMA", "SIGLA", "TEMPO", "FESTA", "FRUTA", "FLORA", "FAUNA",
-        "ETAPA", "ENTRE", "CORTE", "COSTA", "BOLSA", "BLOCO", "ATRIZ", "ARENA",
+        "NORMA", "FORMA", "SIGLA", "TEMPO", "FESTA", "FRUTA", "FLORA", "FARTO",
+        "FAZER", "ENTRE", "CORTE", "COSTA", "BOLSA", "BLOCO", "ATRIZ", "ARENA",
         "ALGUM", "ACASO", "ABRIR", "VASCO", "CARGO", "CINTO", "CLUBE", "CREME",
-        "CRIVO", "DENTE", "DOSEI", "DUELO", "EIXOS", "ELEVA","CARRO","ESTAR", NULL
+        "CRIVO", "DENTE", "DOSEI", "DUELO", "EIXOS", "ELEVA", "CARRO", "ESTAR",
+        "FURIA", "FORTE", "FORMA", "FRACO", "BOLAS", "PEDRA", "FELIZ",  NULL
     };
 
     unsigned short int FimDoJogo = 0; //FimDoJogo recebe inicialmente "falso"
@@ -55,6 +56,14 @@ int main(){
     unsigned short int auxLetrasIncorretas;
     unsigned int scoreTotal = 0;
     unsigned int scorePorTentativa = 20; // Se houver necessidade de mudar a quantidade de pontos por tentativa
+    unsigned short int vitorias = 0;
+    // Variáveis para o temporizador
+    time_t inicioDoTemporizador, tempoDecorrido;
+    unsigned short int segundos = 0;
+    unsigned short int minutos = 0;
+    unsigned short int horas = 0;
+
+    time(&inicioDoTemporizador);//Função que dá início ao temporizador
 
     do{ //(re)Iniciando o jogo do zero
 
@@ -78,13 +87,20 @@ int main(){
 
         do{ // Onde o jogador vai tentando acertar
 
+            time(&tempoDecorrido); // Decorre o tempo
+            segundos = difftime(tempoDecorrido, inicioDoTemporizador);
+
+            horas = segundos/3600;
+            minutos = (segundos%3600)/60;
+            segundos = segundos%60;
+
             fPrintTentativas(&tentativasRestantesDoPlayer, &tentativasTotais);
 
-            printf("A palavra tem 5 letras:\n");
             for(int j = 0; palavraSorteada[j] != '\0'; j++){
                 if(RespostaDoJogador[j] == palavraSorteada[j]){
                     palavraSorteadaMontagem[j] = palavraSorteada[j];
                 }
+                
                 //Verificando se existe o caractere na palavra, e se a lista já existe na lista
                 if(strchr(palavraSorteada, RespostaDoJogador[j]) != NULL && strchr(letrasCorretasDoJogador, RespostaDoJogador[j]) == NULL){
                     letrasCorretasDoJogador[auxLetrasCorretas] = RespostaDoJogador[j];
@@ -118,6 +134,9 @@ int main(){
                 printf("Ganhou %d pontos!\n\n", tentativasRestantesDoPlayer * scorePorTentativa);
                 scoreTotal += tentativasRestantesDoPlayer * scorePorTentativa;
                 printf("Seu score no momento: %d\n\n", scoreTotal);
+                vitorias++;
+                printf("Sequencia de vitorias: %d\n\n", vitorias);
+                printf("Duracao da partida: %02d:%02d:%02d\n\n", horas, minutos, segundos);
                 break;
             }
 
@@ -127,9 +146,13 @@ int main(){
                 printf("Perdeu! Usou todas as suas tentativas!\n");
                 printf("A palavra era: %s\n\n", palavraSorteada);
                 printf("Seu score total foi: %d\n\n", scoreTotal);
+                printf("Sequencia de vitorias: %d\n\n", vitorias);
+                printf("Duracao da partida: %02d:%02d:%02d\n\n", horas, minutos, segundos);
+                vitorias = 0; // O jogador perde a sequência de vitórias que havia conseguido
                 scoreTotal = 0; // O jogador perde todos os pontos após perder
                 break;
             }
+        
 
         }while(tentativasRestantesDoPlayer > 0);
 
@@ -140,9 +163,12 @@ int main(){
                 FimDoJogo = 1; // Fim do jogo recebe verdadeiro
                 break;
             }
-            else if(continuarJogo[0] != 'S')
+            else if(continuarJogo[0] != 'S'){
                 printf("Insira um comando valido!\n\n");
+            }    
         }while(continuarJogo[0] != 'S');
+        
+        time(&inicioDoTemporizador); //Reinicia o temporizador a cada partida
 
     }while(FimDoJogo == 0);
 
