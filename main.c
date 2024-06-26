@@ -3,8 +3,54 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
+#include "letras.h"
 #define charMax 50 +2 // Quantidade máxima de caracteres de uma string, o +2 é referente ao \n e \0.
 
+// Função para desenhar uma letra na tela
+void desenharLetra(const char *str) {
+
+    for (int i = 0; i < 5; i++) {
+        const char *p = str;
+        while (*p) {
+            char letra = *p;
+            switch (letra) {
+                case 'T':
+                    for (int j = 0; j < 5; j++) printf("%c", T[i][j]); 
+                    break;
+                case 'E':
+                    for (int j = 0; j < 5; j++) printf("%c", E[i][j]); 
+                    break;
+                case 'R':
+                    for (int j = 0; j < 5; j++) printf("%c", R[i][j]); 
+                    break;
+                case 'M':
+                    for (int j = 0; j < 5; j++) printf("%c", M[i][j]); 
+                    break;
+                case 'O':
+                    for (int j = 0; j < 5; j++) printf("%c", O[i][j]);
+                    break;
+                case 'C':
+                    for (int j = 0; j < 5; j++) printf("%c", C[i][j]); 
+                    break;
+                case 'J':
+                    for (int j = 0; j < 5; j++) printf("%c", J[i][j]); 
+                    break;
+                case 'G':
+                    for (int j = 0; j < 5; j++) printf("%c", G[i][j]); 
+                    break;
+                case 'A':
+                    for (int j = 0; j < 5; j++) printf("%c", A[i][j]); 
+                    break;
+                default:
+                    for (int j = 0; j < 5; j++) printf(" ");
+                    break;
+            }
+            printf("  "); 
+            p++;
+        }
+        printf("\n");
+    }
+}
 
 //A função remove o '\n' e deixa todos os caracteres maiúsculos.
 void fAdjustString(char *string){
@@ -29,19 +75,15 @@ int fContLista(char **lista){
     return cont;
 }
 
-int main(){
+void comoJogar() {
+    system("CLS");
+    desenharLetra("COMO JOGAR");
+    printf("\n\n• O jogo seleciona aleatoriamente uma palavra de uma lista pré-definida\n• Você tem um número limitado de tentativas (6) para adivinhar a palavra\n• Se você adivinhar uma letra corretamente, essa letra será revelada na palavra\n• As letras corretas e incorretas são registradas e mostradas na tela\n• Você ganha pontos com base no número de tentativas restantes ao adivinhar a palavra corretamente\n• Ao final, seu score total, a sequência de vitórias e o tempo jogado são exibidos\n\n");
+
+}
+void iniciarJogo(){
 
     srand(time(NULL));
-
-    char *lista[] = {
-        "SALVO", "TREVO", "MANTO", "LIMPO", "TENSO", "FAROL", "PLANO", "GRUPO",
-        "MARCO", "SOMAR", "PONTO", "SENHA", "FALSO", "LIVRO", "CASAR", "PESAR",
-        "NORMA", "FORMA", "SIGLA", "TEMPO", "FESTA", "FRUTA", "FLORA", "FARTO",
-        "FAZER", "ENTRE", "CORTE", "COSTA", "BOLSA", "BLOCO", "ATRIZ", "ARENA",
-        "ALGUM", "ACASO", "ABRIR", "VASCO", "CARGO", "CINTO", "CLUBE", "CREME",
-        "CRIVO", "DENTE", "DOSEI", "DUELO", "EIXOS", "ELEVA", "CARRO", "ESTAR",
-        "FURIA", "FORTE", "FORMA", "FRACO", "BOLAS", "PEDRA", "FELIZ",  NULL
-    };
 
     unsigned short int FimDoJogo = 0; //FimDoJogo recebe inicialmente "falso"
     unsigned short int listaTamanho = fContLista(lista);
@@ -176,5 +218,45 @@ int main(){
 
     system("Pause");
 
-    return 0;
+
+}
+
+void main() {
+    unsigned int escolhaJogador;
+    unsigned int continuarMenu = 1;
+    desenharLetra("TERMO");
+
+    while (continuarMenu) {
+        printf("\nOlá, jogador! Selecione uma opção:\n\n");
+        printf("1 - Iniciar o Jogo\n");
+        printf("2 - Como Jogar\n");
+        printf("3 - Sair\n\n");
+        printf("R: ");
+        scanf("%d", &escolhaJogador);
+        getchar();
+
+        switch (escolhaJogador) {
+            case 1:
+                iniciarJogo();
+                continuarMenu = 0;
+                break;
+            case 2:
+                comoJogar();
+                break;
+            case 3:
+                printf("Saindo...\n");
+                exit(0);
+                break;
+            default:
+                printf("Opção inválida!\n");
+                break;
+        }
+
+        if (continuarMenu) {
+            printf("\nPressione ENTER para continuar...\n");
+            getchar();
+            system("CLS");
+            desenharLetra("TERMO");
+        }
+    }
 }
