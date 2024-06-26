@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
+#include <windows.h>
 #include "letras.h"
 #define charMax 50 +2 // Quantidade máxima de caracteres de uma string, o +2 é referente ao \n e \0.
 
@@ -78,8 +79,12 @@ int fContLista(char **lista){
 void comoJogar() {
     system("CLS");
     desenharLetra("COMO JOGAR");
-    printf("\n\n• O jogo seleciona aleatoriamente uma palavra de uma lista pré-definida\n• Você tem um número limitado de tentativas (6) para adivinhar a palavra\n• Se você adivinhar uma letra corretamente, essa letra será revelada na palavra\n• As letras corretas e incorretas são registradas e mostradas na tela\n• Você ganha pontos com base no número de tentativas restantes ao adivinhar a palavra corretamente\n• Ao final, seu score total, a sequência de vitórias e o tempo jogado são exibidos\n\n");
-
+    printf("\n\n- O jogo seleciona aleatoriamente uma palavra secreta de uma lista pre-definida para o jogador advinhar\n");
+    printf("- Voce tem um numero limitado de tentativas (6) para adivinhar a palavra\n");
+    printf("- Se voce adivinhar uma letra corretamente, essa letra sera revelada na palavra\n");
+    printf("- As letras corretas e incorretas sao registradas e mostradas na tela\n");
+    printf("- Voce ganha pontos com base no numero de tentativas restantes ao adivinhar a palavra corretamente\n");
+    printf("- Ao final, seu score total, a sequencia de vitorias e o tempo que o jogador levou para advinhar sao exibidos\n\n");
 }
 void iniciarJogo(){
 
@@ -104,6 +109,18 @@ void iniciarJogo(){
     unsigned short int segundos = 0;
     unsigned short int minutos = 0;
     unsigned short int horas = 0;
+    unsigned short int contagemRegressiva = 3;
+
+    do{
+        system("CLS");
+
+        printf("O jogo comeca em: %d", contagemRegressiva);
+
+        Sleep(1500);
+
+        contagemRegressiva--;
+
+    }while(contagemRegressiva > 0);
 
     time(&inicioDoTemporizador);//Função que dá início ao temporizador
 
@@ -221,13 +238,13 @@ void iniciarJogo(){
 
 }
 
-void main() {
+int main() {
     unsigned int escolhaJogador;
     unsigned int continuarMenu = 1;
     desenharLetra("TERMO");
 
     while (continuarMenu) {
-        printf("\nOlá, jogador! Selecione uma opção:\n\n");
+        printf("\nOla, jogador! Selecione uma opcao:\n\n");
         printf("1 - Iniciar o Jogo\n");
         printf("2 - Como Jogar\n");
         printf("3 - Sair\n\n");
@@ -248,7 +265,7 @@ void main() {
                 exit(0);
                 break;
             default:
-                printf("Opção inválida!\n");
+                printf("Opcao invalida!\n");
                 break;
         }
 
@@ -259,4 +276,5 @@ void main() {
             desenharLetra("TERMO");
         }
     }
+    return 0;
 }
