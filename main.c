@@ -5,7 +5,7 @@
 #include <time.h>
 #include <windows.h>
 #include "letras.h"
-#define charMax 50 +2 // Quantidade máxima de caracteres de uma string, o +2 é referente ao \n e \0.
+#define charMax (50 +2) // Quantidade máxima de caracteres de uma string, o +2 é referente ao \n e \0.
 
 // Função para desenhar uma letra na tela
 void desenharLetra(const char *str) {
@@ -67,10 +67,18 @@ void fPrintTentativas(unsigned short int *tentativasRestantesDoPlayer, unsigned 
     printf("Tentativas restantes: %d/%d\n\n", *tentativasRestantesDoPlayer, *tentativasTotais);
 }
 
-//Função que conta automaticamente a quantidade de palavras na lista, sem a necessidade de intervenção do programador
-int fContListaFacil(char **listaFacil){
+//Função que conta automaticamente a quantidade de palavras na listaNormal, sem a necessidade de intervenção do programador
+int fContlistaNormal(char **listaNormal){
     int cont = 0;
-    for(int i = 0; listaFacil[i] != NULL; i++){
+    for(int i = 0; listaNormal[i] != NULL; i++){
+        cont++;
+    }
+    return cont;
+}
+
+int fContlistaDesafiador(char **listaDesafiador){
+    int cont = 0;
+    for(int i = 0; listaDesafiador[i] != NULL; i++){
         cont++;
     }
     return cont;
@@ -86,12 +94,12 @@ void comoJogar() {
     printf("- Voce ganha pontos com base no numero de tentativas restantes ao adivinhar a palavra corretamente\n");
     printf("- Ao final, seu score total, a sequencia de vitorias e o tempo que o jogador levou para advinhar sao exibidos\n\n");
 }
-void iniciarJogo(){
+void iniciarJogoNormal(){
 
     srand(time(NULL));
 
     unsigned short int FimDoJogo = 0; //FimDoJogo recebe inicialmente "falso"
-    unsigned short int listaFacilTamanho = fContListaFacil(listaFacil);
+    unsigned short int listaNormalTamanho = fContlistaNormal(listaNormal);
     unsigned short int tentativasTotais, tentativasRestantesDoPlayer;
     char palavraSorteada[charMax];
     char palavraSorteadaMontagem[charMax];
@@ -141,7 +149,7 @@ void iniciarJogo(){
         tentativasRestantesDoPlayer = tentativasTotais;
 
         // É nesta parte do código que a palavra será sorteada
-        strcpy(palavraSorteada, listaFacil[rand() % listaFacilTamanho]);
+        strcpy(palavraSorteada, listaNormal[rand() % listaNormalTamanho]);
         strcpy(palavraSorteadaMontagem, "-----");
 
         do{ // Onde o jogador vai tentando acertar
@@ -160,13 +168,13 @@ void iniciarJogo(){
                     palavraSorteadaMontagem[j] = palavraSorteada[j];
                 }
                 
-                //Verificando se existe o caractere na palavra, e se a lista já existe na lista
+                //Verificando se existe o caractere na palavra, e se a listaNormal já existe na listaNormal
                 if(strchr(palavraSorteada, RespostaDoJogador[j]) != NULL && strchr(letrasCorretasDoJogador, RespostaDoJogador[j]) == NULL){
                     letrasCorretasDoJogador[auxLetrasCorretas] = RespostaDoJogador[j];
                     letrasCorretasDoJogador[auxLetrasCorretas + 1] = ' '; // Caractere separador
                     auxLetrasCorretas += 2;
                 }
-                //Verificando se a existência do caractere na palavra é falso, e se já existe na lista
+                //Verificando se a existência do caractere na palavra é falso, e se já existe na listaNormal
                 else if(strchr(palavraSorteada, RespostaDoJogador[j]) == NULL && strchr(letrasIncorretasDoJogador, RespostaDoJogador[j]) == NULL){
 
                     letrasIncorretasDoJogador[auxLetrasIncorretas] = RespostaDoJogador[j];
@@ -234,8 +242,151 @@ void iniciarJogo(){
     system("CLS");
 
     system("Pause");
+}
 
+void iniciarJogoDesafiador(){
+    
+    srand(time(NULL));
 
+    unsigned short int FimDoJogo = 0;
+    unsigned short int listaDesafiadorTamanho = fContlistaDesafiador(listaDesafiador);
+    unsigned short int tentativasTotais, tentativasRestantesDoPlayer;
+    unsigned short int tamanhoDaPalavraSorteada = 0;
+    char palavraSorteada[charMax];
+    char palavraSorteadaMontagem[charMax];
+    char RespostaDoJogador[charMax];
+    char continuarJogo[2];
+    char letrasCorretasDoJogador[charMax];
+    char letrasIncorretasDoJogador[charMax];
+    unsigned short int auxLetrasCorretas;
+    unsigned short int auxLetrasIncorretas;
+    unsigned int scoreTotal = 0;
+    unsigned int scorePorTentativa = 20;
+    unsigned short int vitorias = 0;
+    time_t inicioDoTemporizador, tempoDecorrido;
+    unsigned short int segundos = 0;
+    unsigned short int minutos = 0;
+    unsigned short int horas = 0;
+    unsigned short int contagemRegressiva = 3;
+
+    do{
+        system("CLS");
+        printf("O jogo comeca em: %d", contagemRegressiva);
+
+        Sleep(1000);
+
+        contagemRegressiva--;
+    }while(contagemRegressiva > 0);
+
+    time(&inicioDoTemporizador);
+
+    do{
+        system("CLS");
+
+        for(int i = 0; i < charMax; i++){
+            letrasCorretasDoJogador[i] = '\0';
+            letrasIncorretasDoJogador[i] = '\0';
+            RespostaDoJogador[i] = '\0';
+        }
+
+        auxLetrasCorretas = 0;
+        auxLetrasIncorretas = 0;
+        tentativasTotais = 8;
+        tentativasRestantesDoPlayer = tentativasTotais;
+
+        strcpy(palavraSorteada, listaDesafiador[rand() % listaDesafiadorTamanho]);
+
+        tamanhoDaPalavraSorteada = strlen(palavraSorteada);
+        
+        for(int i = 0; i < tamanhoDaPalavraSorteada; i++){
+            palavraSorteadaMontagem[i] = '-';
+        }
+        palavraSorteadaMontagem[tamanhoDaPalavraSorteada] = '\0';
+
+        do{
+
+            time(&tempoDecorrido);
+            segundos = difftime(tempoDecorrido, inicioDoTemporizador);
+
+            horas = segundos/3600;
+            minutos = (segundos%3600)/60;
+            segundos = segundos%60;
+
+            fPrintTentativas(&tentativasRestantesDoPlayer, &tentativasTotais);
+
+            for(int j = 0; palavraSorteada[j] != '\0'; j++){
+                if(RespostaDoJogador[j] == palavraSorteada[j]){
+                    palavraSorteadaMontagem[j] = palavraSorteada[j];
+                }
+                if(strchr(palavraSorteada, RespostaDoJogador[j]) != NULL && strchr(letrasCorretasDoJogador, RespostaDoJogador[j]) == NULL){
+                    letrasCorretasDoJogador[auxLetrasCorretas] = RespostaDoJogador[j];
+                    letrasCorretasDoJogador[auxLetrasCorretas + 1] = ' ';
+                    auxLetrasCorretas += 2;
+                }
+                else if(strchr(palavraSorteada, RespostaDoJogador[j]) == NULL && strchr(letrasIncorretasDoJogador, RespostaDoJogador[j]) == NULL){
+                    letrasIncorretasDoJogador[auxLetrasIncorretas] = RespostaDoJogador[j];
+                    letrasIncorretasDoJogador[auxLetrasIncorretas + 1] = ' ';
+                    auxLetrasIncorretas += 2;
+                }
+            }
+            printf("A palavra tem %d letras\n\n", strlen(palavraSorteada));
+
+            printf("%s", palavraSorteadaMontagem);
+
+            printf("\n\nLetras corretas: %s\n", letrasCorretasDoJogador);
+
+            printf("Letras incorretas: %s", letrasIncorretasDoJogador);
+
+            printf("\n\nSua resposta: ");
+            fAdjustString(RespostaDoJogador);
+
+            system("CLS");
+
+            if(strcmp(palavraSorteada, RespostaDoJogador) == 0){
+                printf("Acertou!\n");
+                printf("A palavra era: %s\n\n", palavraSorteada);
+                printf("Ganhou %d pontos!\n\n", tentativasRestantesDoPlayer * scorePorTentativa);
+                scoreTotal += tentativasRestantesDoPlayer * scorePorTentativa;;
+                printf("Seu score no momento: %d\n\n", scoreTotal);
+                vitorias++;
+                printf("Sequencia de vitorias: %d\n\n", vitorias);
+                printf("Duracao da partida: %02d:%02d:%02d\n\n", horas, minutos, segundos);
+                break;
+            }
+
+            tentativasRestantesDoPlayer--;
+
+            if(tentativasRestantesDoPlayer == 0){
+                printf("Perdeu! Usou todas as suas tentativas!\n");
+                printf("A palavra era: %s\n\n", palavraSorteada);
+                printf("Seu score total foi: %d\n\n", scoreTotal);
+                printf("Sequencia de vitorias: %d\n\n", vitorias);
+                printf("Duracao da partida: %02d:%02d:%02d\n\n", horas, minutos, segundos);
+                vitorias = 0; 
+                scoreTotal = 0; 
+                break;
+            }
+        
+        }while(tentativasRestantesDoPlayer > 0);
+
+        do{
+            printf("Deseja continuar? [S] ou [N]: ");
+            fAdjustString(continuarJogo);
+            if(continuarJogo[0] == 'N'){
+                FimDoJogo = 1;
+                break;
+            }
+            else if(continuarJogo[0] != 'S'){
+                printf("Insira um comando valido!\n\n");
+            }
+        }while(continuarJogo[0] != 'S');
+
+        time(&inicioDoTemporizador);
+
+    }while(FimDoJogo == 0);
+
+    system("CLS");
+    system("Pause");
 }
 
 int main() {
@@ -254,7 +405,21 @@ int main() {
 
         switch (escolhaJogador) {
             case 1:
-                iniciarJogo();
+                printf("Escolha a dificuldade do jogo:\n\n");
+                printf("1 - Nivel Normal\n");
+                printf("2 - Nivel Dificil\n");
+                printf("R: ");
+                scanf("%d", &escolhaJogador);
+                getchar();
+                if(escolhaJogador == 1){
+                    iniciarJogoNormal();
+                }
+                else if(escolhaJogador == 2){
+                    iniciarJogoDesafiador();
+                }
+                else{
+                    printf("Opcao invalida!.\n");
+                }
                 continuarMenu = 0;
                 break;
             case 2:
