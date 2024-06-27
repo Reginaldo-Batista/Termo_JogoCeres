@@ -76,26 +76,27 @@ char A[5][5] = {
 };
 
 char *listaNormal[] = {
-    "AMOR", "ANEXO", "ALGUM", "ACASO", "ABRIR",
-    "BOMBA", "BOLSA", "BAILE","BOTAS", "BAIXO", 
+    "PROVA", "ANEXO", "ALGUM", "ACASO", "ABRIR",
+    "BOMBA", "BOLSA", "BAILE", "BOTAS", "BAIXO", 
     "CARGO", "CRIME", "CINTO", "CAMPO", "CESTA", 
     "DUELO", "DADOS", "DEUSA", "DOIDA", "DOSES", 
     "ESTAR", "ENVIO", "ENTRA", "EXAME", "EVADE",
     "FURIA", "FLORA", "FORMA", "FONTE", "FILHO", 
     "GESTO", "GATOS", "GOSTA", "GRATO", "GRITO", 
     "HOTEL", "HUMOR", "HINOS", "HONRA", "HASTE",
-    "ILHA", "IMPAR", "IRADO", "IGUAL", "ICONE", 
+    "PUNHO", "IMPAR", "IRADO", "IGUAL", "ICONE", 
     "JOGAR", "JOVEM", "JUNTO", "JUROU", "JOIAS", 
-    "LIMAO", "LINDO", "LICOR", "LIMPO", "LENTO", 
-    "MONTE", "MANTO", "MOLAS", "MORTE", "MEDO", 
+    "MISTO", "LINDO", "LICOR", "LIMPO", "LENTO", 
+    "MONTE", "MANTO", "MOLAS", "MORTE", "FREVO", 
     "NAVIO", "NARIZ", "NOITE", "NOIVA", "NORTE", 
-    "OMBRO", "ONTEM", "OSCAR", "OLHAR", "ONDA", 
+    "OMBRO", "ONTEM", "OSCAR", "OLHAR", "OSTRA", 
     "PULAR", "PODER", "PRIMO", "PRATO", "PAPEL", 
     "ROSCA", "ROLHA", "RADIO", "ROUPA", "REINO",
     "SALVO", "SUAVE", "SANTO", "SOBRA", "SINAL", 
-    "TERMO", "TENSO", "TERMO", "TREVO", "TRAVE", 
+    "TERMO", "TENSO", "PRESO", "TREVO", "TRAVE", 
     "VENTO", "VAZIO", "VALOR", "VIOLA", "VOZES", NULL
 };
+
 char *listaDesafiador[] = {
     "ABACATE", "ALEGRE", "ARQUIVADO", "AMENIZOU", "AMIZADE", 
     "BANQUETE", "BATERIA", "BORRACHUDO", "BALANCEADO", "BRINCADEIRA",
@@ -117,6 +118,5 @@ char *listaDesafiador[] = {
     "TIGRESA", "TENTADOR", "TRABALHADOR", "TREVOSO", "TESTAMENTO", 
     "VIOLENTO", "VIZINHOS", "VANTAJOSO", "VIAJANTE", "VIOLINO", NULL
 };
-
 
 #endif

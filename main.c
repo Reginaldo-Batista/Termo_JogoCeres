@@ -8,7 +8,7 @@
 #define charMax (50 +2) // Quantidade máxima de caracteres de uma string, o +2 é referente ao \n e \0.
 
 // Função para desenhar uma letra na tela
-void desenharLetra(const char *str) {
+void fDesenharLetra(const char *str){
 
     for (int i = 0; i < 5; i++) {
         const char *p = str;
@@ -76,6 +76,7 @@ int fContlistaNormal(char **listaNormal){
     return cont;
 }
 
+//Função que conta automaticamente a quantidade de palavras na listaDesafiador, sem a necessidade de intervenção do programador
 int fContlistaDesafiador(char **listaDesafiador){
     int cont = 0;
     for(int i = 0; listaDesafiador[i] != NULL; i++){
@@ -84,9 +85,9 @@ int fContlistaDesafiador(char **listaDesafiador){
     return cont;
 }
 
-void comoJogar() {
+void fComoJogar(){
     system("CLS");
-    desenharLetra("COMO JOGAR");
+    fDesenharLetra("COMO JOGAR");
     printf("\n\n- O jogo seleciona aleatoriamente uma palavra secreta de uma lista pre-definida para o jogador advinhar\n");
     printf("- Voce tem um numero limitado de tentativas (6) para adivinhar a palavra\n");
     printf("- Se voce adivinhar uma letra corretamente, essa letra sera revelada na palavra\n");
@@ -121,26 +122,25 @@ void iniciarJogo(){
     unsigned short int minutos = 0;
     unsigned short int horas = 0;
     unsigned short int contagemRegressiva = 3;
-
-    printf("Escolha a dificuldade do jogo:\n\n");
-            printf("1 - Nivel Normal\n");
-            printf("2 - Nivel Dificil\n");
-            printf("R: ");
-            scanf("%d", &dificuldade);
-            getchar();
+    
+    do{
+        system("CLS");
+        printf("Escolha a dificuldade do jogo:\n\n");
+        printf("1 - Nivel Normal\n");
+        printf("2 - Nivel Dificil\n");
+        printf("R: ");
+        scanf("%d", &dificuldade);
+        getchar();
+    }while(dificuldade < 1 || dificuldade > 2);
 
     do{
         system("CLS");
-
         printf("O jogo comeca em: %d", contagemRegressiva);
-
-        Sleep(1500);
-
+        Sleep(1000);
         contagemRegressiva--;
-
     }while(contagemRegressiva > 0);
 
-    time(&inicioDoTemporizador);//Função que dá início ao temporizador
+    time(&inicioDoTemporizador); //Função que dá início ao temporizador
 
     do{ //(re)Iniciando o jogo do zero
 
@@ -188,7 +188,7 @@ void iniciarJogo(){
                     palavraSorteadaMontagem[j] = palavraSorteada[j];
                 }
                 
-                //Verificando se existe o caractere na palavra, e se a listaNormal já existe na listaNormal
+                //Verificando se existe o caractere na palavra, e se ele já existe na listaNormal
                 if(strchr(palavraSorteada, RespostaDoJogador[j]) != NULL && strchr(letrasCorretasDoJogador, RespostaDoJogador[j]) == NULL){
                     letrasCorretasDoJogador[auxLetrasCorretas] = RespostaDoJogador[j];
                     letrasCorretasDoJogador[auxLetrasCorretas + 1] = ' '; // Caractere separador
@@ -202,7 +202,11 @@ void iniciarJogo(){
                     auxLetrasIncorretas += 2;
                 }
             }
-            if(dificuldade == 2){
+
+            if(dificuldade == 1){
+                printf("A palavra tem 5 letras\n\n");
+            }
+            else if(dificuldade == 2){
                 printf("A palavra tem %d letras\n\n", tamanhoDaPalavraSorteada);
             }
 
@@ -264,16 +268,14 @@ void iniciarJogo(){
     }while(FimDoJogo == 0);
 
     system("CLS");
-
-    system("Pause");
 }
 
 int main() {
     unsigned int escolhaJogador;
-    unsigned int continuarMenu = 1;
-    desenharLetra("TERMO");
+    unsigned short int continuarMenu = 1; // continuarMenu inicia como 'verdadeiro'
 
     while (continuarMenu) {
+        fDesenharLetra("TERMO");
         printf("\nOla, jogador! Selecione uma opcao:\n\n");
         printf("1 - Iniciar o Jogo\n");
         printf("2 - Como Jogar\n");
@@ -282,13 +284,13 @@ int main() {
         scanf("%d", &escolhaJogador);
         getchar();
 
-        switch (escolhaJogador) {
+        switch(escolhaJogador){
             case 1:
                 iniciarJogo();
-                continuarMenu = 0;
+                continuarMenu = 1;
                 break;
             case 2:
-                comoJogar();
+                fComoJogar();
                 break;
             case 3:
                 printf("Saindo...\n");
@@ -299,11 +301,10 @@ int main() {
                 break;
         }
 
-        if (continuarMenu) {
+        if(continuarMenu){
             printf("\nPressione ENTER para continuar...\n");
             getchar();
             system("CLS");
-            desenharLetra("TERMO");
         }
     }
     return 0;
