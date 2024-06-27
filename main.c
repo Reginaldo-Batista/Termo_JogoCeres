@@ -68,9 +68,9 @@ void fPrintTentativas(unsigned short int *tentativasRestantesDoPlayer, unsigned 
 }
 
 //Função que conta automaticamente a quantidade de palavras na lista, sem a necessidade de intervenção do programador
-int fContLista(char **lista){
+int fContListaFacil(char **listaFacil){
     int cont = 0;
-    for(int i = 0; lista[i] != NULL; i++){
+    for(int i = 0; listaFacil[i] != NULL; i++){
         cont++;
     }
     return cont;
@@ -91,7 +91,7 @@ void iniciarJogo(){
     srand(time(NULL));
 
     unsigned short int FimDoJogo = 0; //FimDoJogo recebe inicialmente "falso"
-    unsigned short int listaTamanho = fContLista(lista);
+    unsigned short int listaFacilTamanho = fContListaFacil(listaFacil);
     unsigned short int tentativasTotais, tentativasRestantesDoPlayer;
     char palavraSorteada[charMax];
     char palavraSorteadaMontagem[charMax];
@@ -141,7 +141,7 @@ void iniciarJogo(){
         tentativasRestantesDoPlayer = tentativasTotais;
 
         // É nesta parte do código que a palavra será sorteada
-        strcpy(palavraSorteada, lista[rand() % listaTamanho]);
+        strcpy(palavraSorteada, listaFacil[rand() % listaFacilTamanho]);
         strcpy(palavraSorteadaMontagem, "-----");
 
         do{ // Onde o jogador vai tentando acertar
