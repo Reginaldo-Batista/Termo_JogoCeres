@@ -308,7 +308,7 @@ void iniciarJogo(Jogador *jogador){
             fAdjustString(continuarJogo);
             if(continuarJogo[0] == 'N'){
                 FimDoJogo = 1; // Fim do jogo recebe verdadeiro
-                jogador->pontuacao += scoreTotal;
+                jogador->pontuacao = scoreTotal;
                 break;
             }
             else if(continuarJogo[0] != 'S'){
