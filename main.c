@@ -7,6 +7,11 @@
 #include "letras.h"
 #define charMax (50 +2) // Quantidade máxima de caracteres de uma string, o +2 é referente ao \n e \0.
 
+typedef struct {
+    char nome[100];
+    int pontuacao;
+} Jogador;
+
 // Função para desenhar uma letra na tela
 void fDesenharLetra(const char *str){
 
@@ -42,6 +47,15 @@ void fDesenharLetra(const char *str){
                 case 'A':
                     for (int j = 0; j < 5; j++) printf("%c", A[i][j]); 
                     break;
+                case 'N':
+                    for (int j = 0; j < 5; j++) printf("%c", N[i][j]); 
+                    break;
+                case 'K':
+                    for (int j = 0; j < 5; j++) printf("%c", K[i][j]); 
+                    break;
+                case 'I':
+                    for (int j = 0; j < 5; j++) printf("%c", I[i][j]); 
+                    break;
                 default:
                     for (int j = 0; j < 5; j++) printf(" ");
                     break;
@@ -50,6 +64,45 @@ void fDesenharLetra(const char *str){
             p++;
         }
         printf("\n");
+    }
+}
+
+// Função para adicionar um jogador ao "banco de dados"
+void adicionar_jogador(const char *arquivo, Jogador jogador) {
+    FILE *file = fopen(arquivo, "a");
+    if(strcmp(jogador.nome, "") == 0) {
+        strcpy(jogador.nome, "DESCONHECIDO");
+    }
+    fprintf(file, "%s, %d\n", jogador.nome, jogador.pontuacao);
+    fclose(file);
+}
+
+// Função para carregar jogadores do "banco de dados"
+void carregar_jogadores(const char *arquivo) {
+    FILE *file = fopen(arquivo, "r");
+    Jogador jogadores[100]; 
+    int num_jogadores = 0;
+
+    while (fscanf(file, "%[^,],%d\n", jogadores[num_jogadores].nome, &jogadores[num_jogadores].pontuacao) != EOF) {
+        num_jogadores++;
+    }
+    fclose(file);
+
+    for (int i = 0; i < num_jogadores - 1; i++) {
+        for (int j = 0; j < num_jogadores - i - 1; j++) {
+            if (jogadores[j].pontuacao < jogadores[j + 1].pontuacao) {
+                Jogador temp = jogadores[j];
+                jogadores[j] = jogadores[j + 1];
+                jogadores[j + 1] = temp;
+            }
+        }
+    }
+
+    system("CLS");
+    fDesenharLetra("RANKING");
+    printf("\n");
+    for (int i = 0; i < num_jogadores; i++) {
+        printf("%d° %s - %d ponto(s)\n", i+1, jogadores[i].nome, jogadores[i].pontuacao);
     }
 }
 
@@ -95,10 +148,10 @@ void fComoJogar(){
     printf("- Voce ganha pontos com base no numero de tentativas restantes ao adivinhar a palavra corretamente\n");
     printf("- Ao final, seu score total, a sequencia de vitorias e o tempo que o jogador levou para advinhar sao exibidos\n\n");
 }
-void iniciarJogo(){
+void iniciarJogo(Jogador *jogador){
 
     srand(time(NULL));
-
+    const char *arquivo = "jogadores.txt";
     unsigned short int FimDoJogo = 0; //FimDoJogo recebe inicialmente "falso"
     unsigned short int listaNormalTamanho = fContlistaNormal(listaNormal);
     unsigned short int listaDesafiadorTamanho = fContlistaDesafiador(listaDesafiador);
@@ -124,10 +177,9 @@ void iniciarJogo(){
     unsigned short int contagemRegressiva = 3;
     
     do{
-        system("CLS");
-        printf("Escolha a dificuldade do jogo:\n\n");
+        printf("\nEscolha a dificuldade do jogo:\n\n");
         printf("1 - Nivel Normal\n");
-        printf("2 - Nivel Dificil\n");
+        printf("2 - Nivel Dificil\n\n");
         printf("R: ");
         scanf("%d", &dificuldade);
         getchar();
@@ -256,6 +308,7 @@ void iniciarJogo(){
             fAdjustString(continuarJogo);
             if(continuarJogo[0] == 'N'){
                 FimDoJogo = 1; // Fim do jogo recebe verdadeiro
+                jogador->pontuacao += scoreTotal;
                 break;
             }
             else if(continuarJogo[0] != 'S'){
@@ -266,33 +319,48 @@ void iniciarJogo(){
         time(&inicioDoTemporizador); //Reinicia o temporizador a cada partida
 
     }while(FimDoJogo == 0);
+    
+    adicionar_jogador(arquivo, *jogador);
 
     system("CLS");
 }
 
 int main() {
-    unsigned int escolhaJogador;
+    const char *arquivo = "jogadores.txt";
+    unsigned int escolhaJogador, aux = 0;
     unsigned short int continuarMenu = 1; // continuarMenu inicia como 'verdadeiro'
+    fDesenharLetra("TERMO");
+    Jogador jogador;
+    jogador.pontuacao = 0;
 
     while (continuarMenu) {
-        fDesenharLetra("TERMO");
-        printf("\nOla, jogador! Selecione uma opcao:\n\n");
-        printf("1 - Iniciar o Jogo\n");
+        if(aux > 0){
+            fDesenharLetra("TERMO");
+        }
+        printf("\nOlá, Jogador! Selecione uma opção:\n");
+        printf("\n1 - Iniciar o Jogo\n");
         printf("2 - Como Jogar\n");
-        printf("3 - Sair\n\n");
+        printf("3 - Ranking\n");
+        printf("4 - Sair\n\n");
         printf("R: ");
         scanf("%d", &escolhaJogador);
         getchar();
 
         switch(escolhaJogador){
             case 1:
-                iniciarJogo();
+                system("CLS");
+                printf("Digite seu nome: ");
+                fAdjustString(jogador.nome);
+                iniciarJogo(&jogador);
                 continuarMenu = 1;
                 break;
             case 2:
-                fComoJogar();
+                fComoJogar(); 
                 break;
             case 3:
+                carregar_jogadores(arquivo);
+                break;
+            case 4:
                 printf("Saindo...\n");
                 exit(0);
                 break;
@@ -305,6 +373,7 @@ int main() {
             printf("\nPressione ENTER para continuar...\n");
             getchar();
             system("CLS");
+            aux++;
         }
     }
     return 0;
