@@ -67,8 +67,8 @@ void fDesenharLetra(const char *str){
     }
 }
 
-// Função para adicionar um jogador ao "banco de dados"
-void adicionar_jogador(const char *arquivo, Jogador jogador) {
+// Função para adicionar um jogador ao banco de dados
+void fAdicionarJogador(const char *arquivo, Jogador jogador) {
     FILE *file = fopen(arquivo, "a");
     if(strcmp(jogador.nome, "") == 0) {
         strcpy(jogador.nome, "DESCONHECIDO");
@@ -77,17 +77,21 @@ void adicionar_jogador(const char *arquivo, Jogador jogador) {
     fclose(file);
 }
 
-// Função para carregar jogadores do "banco de dados"
-void carregar_jogadores(const char *arquivo) {
+// Função para carregar jogadores do banco de dados
+void fCarregarJogadores(const char *arquivo) {
     FILE *file = fopen(arquivo, "r");
+    if (file == NULL) { // Se o arquivo não existir, cria um novo arquivo vazio
+        file = fopen(arquivo, "w");
+        fclose(file);
+    }
     Jogador jogadores[100]; 
     int num_jogadores = 0;
-
+    // Carrega os jogadores do banco de dados
     while (fscanf(file, "%[^,],%d\n", jogadores[num_jogadores].nome, &jogadores[num_jogadores].pontuacao) != EOF) {
         num_jogadores++;
     }
     fclose(file);
-
+    // Ordena os jogadores por pontuação
     for (int i = 0; i < num_jogadores - 1; i++) {
         for (int j = 0; j < num_jogadores - i - 1; j++) {
             if (jogadores[j].pontuacao < jogadores[j + 1].pontuacao) {
@@ -97,11 +101,11 @@ void carregar_jogadores(const char *arquivo) {
             }
         }
     }
-
     system("CLS");
+    // Exibe o ranking de jogadores
     fDesenharLetra("RANKING");
     printf("\n");
-    for (int i = 0; i < num_jogadores; i++) {
+    for (int i = 0; i < num_jogadores; i++) { 
         printf("%d° %s - %d ponto(s)\n", i+1, jogadores[i].nome, jogadores[i].pontuacao);
     }
 }
@@ -151,7 +155,7 @@ void fComoJogar(){
 void iniciarJogo(Jogador *jogador){
 
     srand(time(NULL));
-    const char *arquivo = "jogadores.txt";
+    const char *arquivo = "database.dat";
     unsigned short int FimDoJogo = 0; //FimDoJogo recebe inicialmente "falso"
     unsigned short int listaNormalTamanho = fContlistaNormal(listaNormal);
     unsigned short int listaDesafiadorTamanho = fContlistaDesafiador(listaDesafiador);
@@ -320,13 +324,13 @@ void iniciarJogo(Jogador *jogador){
 
     }while(FimDoJogo == 0);
     
-    adicionar_jogador(arquivo, *jogador);
+    fAdicionarJogador(arquivo, *jogador);
 
     system("CLS");
 }
 
 int main() {
-    const char *arquivo = "jogadores.txt";
+    const char *arquivo = "database.dat";
     unsigned int escolhaJogador, aux = 0;
     unsigned short int continuarMenu = 1; // continuarMenu inicia como 'verdadeiro'
     fDesenharLetra("TERMO");
@@ -358,7 +362,7 @@ int main() {
                 fComoJogar(); 
                 break;
             case 3:
-                carregar_jogadores(arquivo);
+                fCarregarJogadores(arquivo);
                 break;
             case 4:
                 printf("Saindo...\n");
