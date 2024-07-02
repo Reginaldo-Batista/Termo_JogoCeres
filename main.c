@@ -14,54 +14,56 @@ typedef struct {
 
 // Função para desenhar uma letra na tela
 void fDesenharLetra(const char *str){
-
     for (int i = 0; i < 5; i++) {
-        const char *p = str;
-        while (*p) {
-            char letra = *p;
+        const char *aux = str;
+        while (*aux) {
+            char letra = *aux;
             switch (letra) {
                 case 'T':
-                    for (int j = 0; j < 5; j++) printf("%c", T[i][j]); 
+                    for (int j = 0; j < 5; j++) printf("\033[0;31m%c", T[i][j]); printf("\033[0m");
                     break;
                 case 'E':
-                    for (int j = 0; j < 5; j++) printf("%c", E[i][j]); 
+                    for (int j = 0; j < 5; j++) printf("\033[0;32m%c", E[i][j]); printf("\033[0m");
                     break;
                 case 'R':
-                    for (int j = 0; j < 5; j++) printf("%c", R[i][j]); 
+                    for (int j = 0; j < 5; j++) printf("\033[0;35m%c", R[i][j]); printf("\033[0m");
                     break;
                 case 'M':
-                    for (int j = 0; j < 5; j++) printf("%c", M[i][j]); 
+                    for (int j = 0; j < 5; j++) printf("\033[0;34m%c", M[i][j]); printf("\033[0m");
                     break;
                 case 'O':
-                    for (int j = 0; j < 5; j++) printf("%c", O[i][j]);
+                    for (int j = 0; j < 5; j++) printf("\033[0;33m%c", O[i][j]); printf("\033[0m");
                     break;
                 case 'C':
-                    for (int j = 0; j < 5; j++) printf("%c", C[i][j]); 
+                    for (int j = 0; j < 5; j++) printf("\033[0;36m%c", C[i][j]); printf("\033[0m");
                     break;
                 case 'J':
-                    for (int j = 0; j < 5; j++) printf("%c", J[i][j]); 
+                    for (int j = 0; j < 5; j++) printf("\033[0;32m%c", J[i][j]); printf("\033[0m");
                     break;
                 case 'G':
-                    for (int j = 0; j < 5; j++) printf("%c", G[i][j]); 
+                    for (int j = 0; j < 5; j++) printf("\033[0;31m%c", G[i][j]); printf("\033[0m");
                     break;
                 case 'A':
-                    for (int j = 0; j < 5; j++) printf("%c", A[i][j]); 
+                    for (int j = 0; j < 5; j++) printf("\033[0;32m%c", A[i][j]); printf("\033[0m");
                     break;
                 case 'N':
-                    for (int j = 0; j < 5; j++) printf("%c", N[i][j]); 
+                    for (int j = 0; j < 5; j++) printf("\033[0;33m%c", N[i][j]); printf("\033[0m");
                     break;
                 case 'K':
-                    for (int j = 0; j < 5; j++) printf("%c", K[i][j]); 
+                    for (int j = 0; j < 5; j++) printf("\033[0;34m%c", K[i][j]); printf("\033[0m");
                     break;
                 case 'I':
-                    for (int j = 0; j < 5; j++) printf("%c", I[i][j]); 
+                    for (int j = 0; j < 5; j++) printf("\033[0;35m%c", I[i][j]); printf("\033[0m");
+                    break;
+                case 'Q':
+                    for (int j = 0; j < 5; j++) printf("\033[0;36m%c", Q[i][j]); printf("\033[0m");
                     break;
                 default:
                     for (int j = 0; j < 5; j++) printf(" ");
                     break;
             }
             printf("  "); 
-            p++;
+            aux++;
         }
         printf("\n");
     }
@@ -79,13 +81,14 @@ void fAdicionarJogador(const char *arquivo, Jogador jogador) {
 
 // Função para carregar jogadores do banco de dados
 void fCarregarJogadores(const char *arquivo) {
+    int num_jogadores = 0;
+    Jogador jogadores[100];
+    Jogador temp;
     FILE *file = fopen(arquivo, "r");
     if (file == NULL) { // Se o arquivo não existir, cria um novo arquivo vazio
         file = fopen(arquivo, "w");
         fclose(file);
     }
-    Jogador jogadores[100]; 
-    int num_jogadores = 0;
     // Carrega os jogadores do banco de dados
     while (fscanf(file, "%[^,],%d\n", jogadores[num_jogadores].nome, &jogadores[num_jogadores].pontuacao) != EOF) {
         num_jogadores++;
@@ -95,7 +98,7 @@ void fCarregarJogadores(const char *arquivo) {
     for (int i = 0; i < num_jogadores - 1; i++) {
         for (int j = 0; j < num_jogadores - i - 1; j++) {
             if (jogadores[j].pontuacao < jogadores[j + 1].pontuacao) {
-                Jogador temp = jogadores[j];
+                temp = jogadores[j];
                 jogadores[j] = jogadores[j + 1];
                 jogadores[j + 1] = temp;
             }
@@ -104,10 +107,21 @@ void fCarregarJogadores(const char *arquivo) {
     system("CLS");
     // Exibe o ranking de jogadores
     fDesenharLetra("RANKING");
-    printf("\n");
-    for (int i = 0; i < num_jogadores; i++) { 
+    printf("\n\n");
+    for (int i = 0; i < num_jogadores; i++) {
+        if(i + 1 == 1){
+            printf("\033[0;33m🥇 %s - %d ponto(s)\033[0m\n", jogadores[i].nome, jogadores[i].pontuacao);
+        }else if(i + 1 == 2){
+            printf("\033[38;5;247m🥈 %s - %d ponto(s)\033[0m\n", jogadores[i].nome, jogadores[i].pontuacao);
+        }else if(i + 1 == 3){
+            printf("\033[38;2;205;127;50m🥉 %s - %d ponto(s)\033[0m\n", jogadores[i].nome, jogadores[i].pontuacao);
+        }else{
         printf("%d° %s - %d ponto(s)\n", i+1, jogadores[i].nome, jogadores[i].pontuacao);
+        printf("%d° %s - %d ponto(s)\n", i+1, jogadores[i].nome, jogadores[i].pontuacao);
+            printf("%d° %s - %d ponto(s)\n", i+1, jogadores[i].nome, jogadores[i].pontuacao);
+        }
     }
+    printf("\n");
 }
 
 //A função remove o '\n' e deixa todos os caracteres maiúsculos.
@@ -144,7 +158,7 @@ int fContlistaDesafiador(char **listaDesafiador){
 
 void fComoJogar(){
     system("CLS");
-    fDesenharLetra("COMO JOGAR");
+    fDesenharLetra("COMO JOGARQ");
     printf("\n\n- O jogo seleciona aleatoriamente uma palavra secreta de uma lista pre-definida para o jogador advinhar\n");
     printf("- Voce tem um numero limitado de tentativas (6) para adivinhar a palavra\n");
     printf("- Se voce adivinhar uma letra corretamente, essa letra sera revelada na palavra\n");
@@ -341,8 +355,8 @@ int main() {
         if(aux > 0){
             fDesenharLetra("TERMO");
         }
-        printf("\nOlá, Jogador! Selecione uma opção:\n");
-        printf("\n1 - Iniciar o Jogo\n");
+        printf("\nOlá, Jogador! Selecione uma opção:\n\n");
+        printf("1 - Iniciar o Jogo\n");
         printf("2 - Como Jogar\n");
         printf("3 - Ranking\n");
         printf("4 - Sair\n\n");
