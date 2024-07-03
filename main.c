@@ -116,8 +116,6 @@ void fCarregarJogadores(const char *arquivo) {
         }else if(i + 1 == 3){
             printf("\033[38;2;205;127;50m🥉 %s - %d ponto(s)\033[0m\n", jogadores[i].nome, jogadores[i].pontuacao);
         }else{
-        printf("%d° %s - %d ponto(s)\n", i+1, jogadores[i].nome, jogadores[i].pontuacao);
-        printf("%d° %s - %d ponto(s)\n", i+1, jogadores[i].nome, jogadores[i].pontuacao);
             printf("%d° %s - %d ponto(s)\n", i+1, jogadores[i].nome, jogadores[i].pontuacao);
         }
     }
