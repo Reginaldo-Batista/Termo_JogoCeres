@@ -5,7 +5,7 @@
 #include <time.h>
 #include <windows.h>
 #include "letras.h"
-#define charMax 50 +2 // Quantidade máxima de caracteres de uma string, o +2 é referente ao \n e \0.
+#define charMax (50 +2) // Quantidade máxima de caracteres de uma string, o +2 é referente ao \n e \0.
 
 typedef struct {
     char nome[100];
@@ -14,56 +14,54 @@ typedef struct {
 
 // Função para desenhar uma letra na tela
 void fDesenharLetra(const char *str){
+
     for (int i = 0; i < 5; i++) {
-        const char *aux = str;
-        while (*aux) {
-            char letra = *aux;
+        const char *p = str;
+        while (*p) {
+            char letra = *p;
             switch (letra) {
                 case 'T':
-                    for (int j = 0; j < 5; j++) printf("\033[0;31m%c", T[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf("%c", T[i][j]); 
                     break;
                 case 'E':
-                    for (int j = 0; j < 5; j++) printf("\033[0;32m%c", E[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf("%c", E[i][j]); 
                     break;
                 case 'R':
-                    for (int j = 0; j < 5; j++) printf("\033[0;35m%c", R[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf("%c", R[i][j]); 
                     break;
                 case 'M':
-                    for (int j = 0; j < 5; j++) printf("\033[0;34m%c", M[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf("%c", M[i][j]); 
                     break;
                 case 'O':
-                    for (int j = 0; j < 5; j++) printf("\033[0;33m%c", O[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf("%c", O[i][j]);
                     break;
                 case 'C':
-                    for (int j = 0; j < 5; j++) printf("\033[0;36m%c", C[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf("%c", C[i][j]); 
                     break;
                 case 'J':
-                    for (int j = 0; j < 5; j++) printf("\033[0;32m%c", J[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf("%c", J[i][j]); 
                     break;
                 case 'G':
-                    for (int j = 0; j < 5; j++) printf("\033[0;31m%c", G[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf("%c", G[i][j]); 
                     break;
                 case 'A':
-                    for (int j = 0; j < 5; j++) printf("\033[0;32m%c", A[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf("%c", A[i][j]); 
                     break;
                 case 'N':
-                    for (int j = 0; j < 5; j++) printf("\033[0;33m%c", N[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf("%c", N[i][j]); 
                     break;
                 case 'K':
-                    for (int j = 0; j < 5; j++) printf("\033[0;34m%c", K[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf("%c", K[i][j]); 
                     break;
                 case 'I':
-                    for (int j = 0; j < 5; j++) printf("\033[0;35m%c", I[i][j]); printf("\033[0m");
-                    break;
-                case 'Q':
-                    for (int j = 0; j < 5; j++) printf("\033[0;36m%c", Q[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf("%c", I[i][j]); 
                     break;
                 default:
                     for (int j = 0; j < 5; j++) printf(" ");
                     break;
             }
             printf("  "); 
-            aux++;
+            p++;
         }
         printf("\n");
     }
@@ -81,14 +79,13 @@ void fAdicionarJogador(const char *arquivo, Jogador jogador) {
 
 // Função para carregar jogadores do banco de dados
 void fCarregarJogadores(const char *arquivo) {
-    int num_jogadores = 0;
-    Jogador jogadores[100];
-    Jogador temp;
     FILE *file = fopen(arquivo, "r");
     if (file == NULL) { // Se o arquivo não existir, cria um novo arquivo vazio
         file = fopen(arquivo, "w");
         fclose(file);
     }
+    Jogador jogadores[100]; 
+    int num_jogadores = 0;
     // Carrega os jogadores do banco de dados
     while (fscanf(file, "%[^,],%d\n", jogadores[num_jogadores].nome, &jogadores[num_jogadores].pontuacao) != EOF) {
         num_jogadores++;
@@ -98,7 +95,7 @@ void fCarregarJogadores(const char *arquivo) {
     for (int i = 0; i < num_jogadores - 1; i++) {
         for (int j = 0; j < num_jogadores - i - 1; j++) {
             if (jogadores[j].pontuacao < jogadores[j + 1].pontuacao) {
-                temp = jogadores[j];
+                Jogador temp = jogadores[j];
                 jogadores[j] = jogadores[j + 1];
                 jogadores[j + 1] = temp;
             }
@@ -107,19 +104,10 @@ void fCarregarJogadores(const char *arquivo) {
     system("CLS");
     // Exibe o ranking de jogadores
     fDesenharLetra("RANKING");
-    printf("\n\n");
-    for (int i = 0; i < num_jogadores; i++) {
-        if(i + 1 == 1){
-            printf("\033[0;33m🥇 %s - %d ponto(s)\033[0m\n", jogadores[i].nome, jogadores[i].pontuacao);
-        }else if(i + 1 == 2){
-            printf("\033[38;5;247m🥈 %s - %d ponto(s)\033[0m\n", jogadores[i].nome, jogadores[i].pontuacao);
-        }else if(i + 1 == 3){
-            printf("\033[38;2;205;127;50m🥉 %s - %d ponto(s)\033[0m\n", jogadores[i].nome, jogadores[i].pontuacao);
-        }else{
-            printf("%d° %s - %d ponto(s)\n", i+1, jogadores[i].nome, jogadores[i].pontuacao);
-        }
-    }
     printf("\n");
+    for (int i = 0; i < num_jogadores; i++) { 
+        printf("%d° %s - %d ponto(s)\n", i+1, jogadores[i].nome, jogadores[i].pontuacao);
+    }
 }
 
 //A função remove o '\n' e deixa todos os caracteres maiúsculos.
@@ -156,7 +144,7 @@ int fContlistaDesafiador(char **listaDesafiador){
 
 void fComoJogar(){
     system("CLS");
-    fDesenharLetra("COMO JOGARQ");
+    fDesenharLetra("COMO JOGAR");
     printf("\n\n- O jogo seleciona aleatoriamente uma palavra secreta de uma lista pre-definida para o jogador advinhar\n");
     printf("- Voce tem um numero limitado de tentativas (6) para adivinhar a palavra\n");
     printf("- Se voce adivinhar uma letra corretamente, essa letra sera revelada na palavra\n");
@@ -229,16 +217,16 @@ void iniciarJogo(Jogador *jogador){
         // É nesta parte do código que a palavra será sorteada
         if(dificuldade == 1){
             strcpy(palavraSorteada, listaNormal[rand() % listaNormalTamanho]);
-            strcpy(palavraSorteadaMontagem, "-----");
         }
         else if(dificuldade == 2){
             strcpy(palavraSorteada, listaDesafiador[rand() % listaDesafiadorTamanho]);
-            tamanhoDaPalavraSorteada = strlen(palavraSorteada);
-            for(int i = 0; i < tamanhoDaPalavraSorteada; i++){
-                palavraSorteadaMontagem[i] = '-';
-            }
-            palavraSorteadaMontagem[tamanhoDaPalavraSorteada] = '\0';
         }
+        tamanhoDaPalavraSorteada = strlen(palavraSorteada);
+        for(int i = 0; i < tamanhoDaPalavraSorteada; i++){
+            palavraSorteadaMontagem[i] = '-';
+        }
+        palavraSorteadaMontagem[tamanhoDaPalavraSorteada] = '\0';
+        
 
         do{ // Onde o jogador vai tentando acertar
 
@@ -270,13 +258,8 @@ void iniciarJogo(Jogador *jogador){
                     auxLetrasIncorretas += 2;
                 }
             }
-
-            if(dificuldade == 1){
-                printf("A palavra tem 5 letras\n\n");
-            }
-            else if(dificuldade == 2){
-                printf("A palavra tem %d letras\n\n", tamanhoDaPalavraSorteada);
-            }
+            
+            printf("A palavra tem %d letras\n\n", tamanhoDaPalavraSorteada);
 
             printf("%s", palavraSorteadaMontagem);
 
@@ -315,7 +298,6 @@ void iniciarJogo(Jogador *jogador){
                 scoreTotal = 0; // O jogador perde todos os pontos após perder
                 break;
             }
-        
 
         }while(tentativasRestantesDoPlayer > 0);
 
@@ -327,9 +309,27 @@ void iniciarJogo(Jogador *jogador){
                 jogador->pontuacao = scoreTotal;
                 break;
             }
-            else if(continuarJogo[0] != 'S'){
+            else if(continuarJogo[0] == 'S'){
+                printf("Deseja mudar a dificuldade? [S] ou [N]: \n");
+                fAdjustString(continuarJogo);
+                if(continuarJogo[0] == 'S'){
+                    printf("Digite a dificuldade que deseja alterar\n");
+                    printf("1 - Nivel Normal\n");
+                    printf("2 - Nivel Dificil\n\n");
+                    printf("R: ");
+                    scanf("%d", &dificuldade);
+                    getchar();
+                }
+                else if(continuarJogo[0] == 'N'){
+                    break;
+                }
+                else{
+                    printf("Insira um comando valido!\n\n");
+                }
+            }   
+            else{
                 printf("Insira um comando valido!\n\n");
-            }    
+            } 
         }while(continuarJogo[0] != 'S');
         
         time(&inicioDoTemporizador); //Reinicia o temporizador a cada partida
@@ -344,7 +344,7 @@ void iniciarJogo(Jogador *jogador){
 int main() {
     const char *arquivo = "database.dat";
     unsigned int escolhaJogador, aux = 0;
-    unsigned short int continuarMenu = 1; // continuarMenu inicia como 'verdadeiro'
+    unsigned short int continuarMenu = 1; // continuarMenu inicia como "verdadeiro"
     fDesenharLetra("TERMO");
     Jogador jogador;
     jogador.pontuacao = 0;
@@ -353,8 +353,8 @@ int main() {
         if(aux > 0){
             fDesenharLetra("TERMO");
         }
-        printf("\nOlá, Jogador! Selecione uma opção:\n\n");
-        printf("1 - Iniciar o Jogo\n");
+        printf("\nOlá, Jogador! Selecione uma opção:\n");
+        printf("\n1 - Iniciar o Jogo\n");
         printf("2 - Como Jogar\n");
         printf("3 - Ranking\n");
         printf("4 - Sair\n\n");
