@@ -5,7 +5,7 @@
 #include <time.h>
 #include <windows.h>
 #include "letras.h"
-#define charMax (50 +2) // Quantidade máxima de caracteres de uma string, o +2 é referente ao \n e \0.
+#define charMax 50 +2 // Quantidade máxima de caracteres de uma string, o +2 é referente ao \n e \0.
 
 typedef struct {
     char nome[100];
