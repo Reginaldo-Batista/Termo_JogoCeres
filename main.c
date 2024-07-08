@@ -5,7 +5,15 @@
 #include <time.h>
 #include <windows.h>
 #include "letras.h"
+
 #define charMax (50 +2) // Quantidade máxima de caracteres de uma string, o +2 é referente ao \n e \0.
+#define RED     "\033[0;31m"
+#define GREEN   "\033[0;32m"
+#define YELLOW  "\033[0;33m"
+#define BLUE    "\033[0;34m"
+#define MAGENTA "\033[0;35m"
+#define CYAN    "\033[0;36m"
+#define RESET   "\033[0m"
 
 typedef struct {
     char nome[100];
@@ -13,62 +21,61 @@ typedef struct {
 } Jogador;
 
 // Função para desenhar uma letra na tela
-void fDesenharLetra(const char *str){
+void fDesenharLetra(const char *str) {
     for (int i = 0; i < 5; i++) {
         const char *aux = str;
         while (*aux) {
             char letra = *aux;
             switch (letra) {
                 case 'T':
-                    for (int j = 0; j < 5; j++) printf("\033[0;31m%c", T[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf(RED "%c" RESET, T[i][j]);
                     break;
                 case 'E':
-                    for (int j = 0; j < 5; j++) printf("\033[0;32m%c", E[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf(GREEN "%c" RESET, E[i][j]);
                     break;
                 case 'R':
-                    for (int j = 0; j < 5; j++) printf("\033[0;35m%c", R[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf(MAGENTA "%c" RESET, R[i][j]);
                     break;
                 case 'M':
-                    for (int j = 0; j < 5; j++) printf("\033[0;34m%c", M[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf(BLUE "%c" RESET, M[i][j]);
                     break;
                 case 'O':
-                    for (int j = 0; j < 5; j++) printf("\033[0;33m%c", O[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf(YELLOW "%c" RESET, O[i][j]);
                     break;
                 case 'C':
-                    for (int j = 0; j < 5; j++) printf("\033[0;36m%c", C[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf(CYAN "%c" RESET, C[i][j]);
                     break;
                 case 'J':
-                    for (int j = 0; j < 5; j++) printf("\033[0;32m%c", J[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf(GREEN "%c" RESET, J[i][j]);
                     break;
                 case 'G':
-                    for (int j = 0; j < 5; j++) printf("\033[0;31m%c", G[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf(RED "%c" RESET, G[i][j]);
                     break;
                 case 'A':
-                    for (int j = 0; j < 5; j++) printf("\033[0;32m%c", A[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf(GREEN "%c" RESET, A[i][j]);
                     break;
                 case 'N':
-                    for (int j = 0; j < 5; j++) printf("\033[0;33m%c", N[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf(YELLOW "%c" RESET, N[i][j]);
                     break;
                 case 'K':
-                    for (int j = 0; j < 5; j++) printf("\033[0;34m%c", K[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf(BLUE "%c" RESET, K[i][j]);
                     break;
                 case 'I':
-                    for (int j = 0; j < 5; j++) printf("\033[0;35m%c", I[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf(MAGENTA "%c" RESET, I[i][j]);
                     break;
                 case 'Q':
-                    for (int j = 0; j < 5; j++) printf("\033[0;36m%c", Q[i][j]); printf("\033[0m");
+                    for (int j = 0; j < 5; j++) printf(CYAN "%c" RESET, Q[i][j]);
                     break;
                 default:
                     for (int j = 0; j < 5; j++) printf(" ");
                     break;
             }
-            printf("  "); 
+            printf("  ");
             aux++;
         }
         printf("\n");
     }
 }
-
 // Função para adicionar um jogador ao banco de dados
 void fAdicionarJogador(const char *arquivo, Jogador jogador) {
     FILE *file = fopen(arquivo, "a");
@@ -366,8 +373,8 @@ int main() {
         if(aux > 0){
             fDesenharLetra("TERMO");
         }
-        printf("\nOla, Jogador! Selecione uma opcao:\n");
-        printf("\n1 - Iniciar o Jogo\n");
+        printf("\nOla, Jogador! Selecione uma opcao:\n\n");
+        printf("1 - Iniciar o Jogo\n");
         printf("2 - Como Jogar\n");
         printf("3 - Ranking\n");
         printf("4 - Sair\n\n");
