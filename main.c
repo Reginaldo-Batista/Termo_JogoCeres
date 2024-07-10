@@ -5,15 +5,7 @@
 #include <time.h>
 #include <windows.h>
 #include "letras.h"
-
 #define charMax (50 +2) // Quantidade máxima de caracteres de uma string, o +2 é referente ao \n e \0.
-#define RED     "\033[0;31m"
-#define GREEN   "\033[0;32m"
-#define YELLOW  "\033[0;33m"
-#define BLUE    "\033[0;34m"
-#define MAGENTA "\033[0;35m"
-#define CYAN    "\033[0;36m"
-#define RESET   "\033[0m"
 
 typedef struct {
     char nome[100];
@@ -28,54 +20,146 @@ void fDesenharLetra(const char *str) {
             char letra = *aux;
             switch (letra) {
                 case 'T':
-                    for (int j = 0; j < 5; j++) printf(RED "%c" RESET, T[i][j]);
+                    for (int j = 0; j < 5; j++){
+                        if(T[i][j] != ' '){
+                            printf("\033[0;41m \033[0m"); 
+                        }
+                        else{
+                            printf(" ");
+                        }
+                    } 
                     break;
                 case 'E':
-                    for (int j = 0; j < 5; j++) printf(GREEN "%c" RESET, E[i][j]);
+                    for (int j = 0; j < 5; j++){
+                        if(E[i][j] != ' '){
+                            printf("\033[0;42m \033[0m");
+                        }
+                        else{
+                            printf(" ");
+                        }
+                    } 
                     break;
                 case 'R':
-                    for (int j = 0; j < 5; j++) printf(MAGENTA "%c" RESET, R[i][j]);
+                    for (int j = 0; j < 5; j++){
+                        if(R[i][j] != ' '){
+                            printf("\033[0;45m \033[0m");
+                        }
+                        else{
+                            printf(" ");
+                        }
+                    } 
                     break;
                 case 'M':
-                    for (int j = 0; j < 5; j++) printf(BLUE "%c" RESET, M[i][j]);
+                    for (int j = 0; j < 5; j++){
+                        if(M[i][j] != ' '){
+                            printf("\033[0;44m \033[0m");
+                        }
+                        else{
+                            printf(" ");
+                        }
+                    }
                     break;
                 case 'O':
-                    for (int j = 0; j < 5; j++) printf(YELLOW "%c" RESET, O[i][j]);
+                    for (int j = 0; j < 5; j++){
+                        if(O[i][j] != ' '){
+                            printf("\033[0;43m \033[0m");
+                        }
+                        else{
+                            printf(" ");
+                        }
+                    }
                     break;
                 case 'C':
-                    for (int j = 0; j < 5; j++) printf(CYAN "%c" RESET, C[i][j]);
+                    for (int j = 0; j < 5; j++){
+                        if(C[i][j] != ' '){
+                            printf("\033[0;46m \033[0m");
+                        }
+                        else{
+                            printf(" ");
+                        }
+                    } 
                     break;
                 case 'J':
-                    for (int j = 0; j < 5; j++) printf(GREEN "%c" RESET, J[i][j]);
+                    for (int j = 0; j < 5; j++){
+                        if(J[i][j] != ' '){
+                            printf("\033[0;42m \033[0m");
+                        }
+                        else{
+                            printf(" ");
+                        }
+                    } 
                     break;
                 case 'G':
-                    for (int j = 0; j < 5; j++) printf(RED "%c" RESET, G[i][j]);
+                    for (int j = 0; j < 5; j++){
+                        if(G[i][j] != ' '){
+                            printf("\033[0;41m \033[0m");
+                        }
+                        else{
+                            printf(" ");
+                        }
+                    } 
                     break;
                 case 'A':
-                    for (int j = 0; j < 5; j++) printf(GREEN "%c" RESET, A[i][j]);
+                    for (int j = 0; j < 5; j++){
+                        if(A[i][j] != ' '){
+                            printf("\033[0;42m \033[0m");
+                        }
+                        else{
+                            printf(" ");
+                        }
+                    } 
                     break;
                 case 'N':
-                    for (int j = 0; j < 5; j++) printf(YELLOW "%c" RESET, N[i][j]);
+                    for (int j = 0; j < 5; j++){
+                        if(N[i][j] != ' '){
+                            printf("\033[0;43m \033[0m"); 
+                        }
+                        else{
+                            printf(" ");
+                        }
+                    } 
                     break;
                 case 'K':
-                    for (int j = 0; j < 5; j++) printf(BLUE "%c" RESET, K[i][j]);
+                    for (int j = 0; j < 5; j++){
+                        if(K[i][j] != ' '){
+                            printf("\033[0;44m \033[0m");
+                        }
+                        else{
+                            printf(" ");
+                        }
+                    } 
                     break;
                 case 'I':
-                    for (int j = 0; j < 5; j++) printf(MAGENTA "%c" RESET, I[i][j]);
+                    for (int j = 0; j < 5; j++){
+                        if(I[i][j] != ' '){
+                            printf("\033[0;45m \033[0m");
+                        }
+                        else{
+                            printf(" ");
+                        }
+                    } 
                     break;
                 case 'Q':
-                    for (int j = 0; j < 5; j++) printf(CYAN "%c" RESET, Q[i][j]);
+                    for (int j = 0; j < 5; j++){
+                        if(Q[i][j] != ' '){
+                            printf("\033[0;46m \033[0m");
+                        }
+                        else{
+                            printf(" ");
+                        }
+                    } 
                     break;
                 default:
                     for (int j = 0; j < 5; j++) printf(" ");
                     break;
             }
-            printf("  ");
+            printf("  "); 
             aux++;
         }
         printf("\n");
     }
 }
+
 // Função para adicionar um jogador ao banco de dados
 void fAdicionarJogador(const char *arquivo, Jogador jogador) {
     FILE *file = fopen(arquivo, "a");
@@ -113,21 +197,10 @@ void fCarregarJogadores(const char *arquivo) {
     system("CLS");
     // Exibe o ranking de jogadores
     fDesenharLetra("RANKING");
-    printf("\n\n");
-    for (int i = 0; i < num_jogadores; i++) { 
-        if(i + 1 == 1){
-            printf("\033[0;33m🥇 %s - %d ponto(s)\033[0m\n", jogadores[i].nome, jogadores[i].pontuacao);
-        }else if(i + 1 == 2){
-            printf("\033[38;5;247m🥈 %s - %d ponto(s)\033[0m\n", jogadores[i].nome, jogadores[i].pontuacao);    
-        }
-        else if(i + 1 == 3){
-            printf("\033[38;2;205;127;50m🥉 %s - %d ponto(s)\033[0m\n", jogadores[i].nome, jogadores[i].pontuacao);
-        }
-        else{
-            printf("%d° %s - %d ponto(s)\n", i+1, jogadores[i].nome, jogadores[i].pontuacao);
-        }
-    }
     printf("\n");
+    for (int i = 0; i < num_jogadores; i++) { 
+        printf("%d° %s - %d ponto(s)\n", i+1, jogadores[i].nome, jogadores[i].pontuacao);
+    }
 }
 
 //A função remove o '\n' e deixa todos os caracteres maiúsculos.
@@ -164,7 +237,7 @@ int fContlistaDesafiador(char **listaDesafiador){
 
 void fComoJogar(){
     system("CLS");
-    fDesenharLetra("COMO JOGAR");
+    fDesenharLetra("COMO JOGAR Q");
     printf("\n\n- O jogo seleciona aleatoriamente uma palavra secreta de uma lista pre-definida para o jogador advinhar\n");
     printf("- Voce tem um numero limitado de tentativas (6) para adivinhar a palavra\n");
     printf("- Se voce adivinhar uma letra corretamente, essa letra sera revelada na palavra\n");
@@ -202,8 +275,8 @@ void iniciarJogo(Jogador *jogador){
     
     do{
         printf("\nEscolha a dificuldade do jogo:\n\n");
-        printf("1 - Nivel Normal\n");
-        printf("2 - Nivel Dificil\n\n");
+        printf("[1] Nivel Normal\n");
+        printf("[2] Nivel Dificil\n\n");
         printf("R: ");
         scanf("%d", &dificuldade);
         getchar();
@@ -322,7 +395,7 @@ void iniciarJogo(Jogador *jogador){
         }while(tentativasRestantesDoPlayer > 0);
 
         do{
-            printf("Deseja continuar? [S] ou [N]: ");
+            printf("Deseja continuar?\n [S] ou [N]: ");
             fAdjustString(continuarJogo);
             if(continuarJogo[0] == 'N'){
                 FimDoJogo = 1; // Fim do jogo recebe verdadeiro
@@ -330,12 +403,12 @@ void iniciarJogo(Jogador *jogador){
                 break;
             }
             else if(continuarJogo[0] == 'S'){
-                printf("Deseja mudar a dificuldade? [S] ou [N]: \n");
+                printf("Deseja mudar a dificuldade?\n [S] ou [N]: \n");
                 fAdjustString(continuarJogo);
                 if(continuarJogo[0] == 'S'){
                     printf("Digite a dificuldade que deseja alterar\n");
-                    printf("1 - Nivel Normal\n");
-                    printf("2 - Nivel Dificil\n\n");
+                    printf("[1] Nivel Normal\n");
+                    printf("[2] Nivel Dificil\n\n");
                     printf("R: ");
                     scanf("%d", &dificuldade);
                     getchar();
@@ -373,11 +446,11 @@ int main() {
         if(aux > 0){
             fDesenharLetra("TERMO");
         }
-        printf("\nOla, Jogador! Selecione uma opcao:\n\n");
-        printf("1 - Iniciar o Jogo\n");
-        printf("2 - Como Jogar\n");
-        printf("3 - Ranking\n");
-        printf("4 - Sair\n\n");
+        printf("\nOla, Jogador!\nSelecione uma opcao:\n");
+        printf("\n[1] Iniciar o Jogo\n");
+        printf("[2] Como Jogar\n");
+        printf("[3] Ranking\n");
+        printf("[4] Sair\n\n");
         printf("R: ");
         scanf("%d", &escolhaJogador);
         getchar();
