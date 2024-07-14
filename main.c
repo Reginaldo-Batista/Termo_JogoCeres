@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <time.h>
 #include <windows.h>
+#include <conio.h>
 #include "letras.h"
 #define charMax (50 +2) // Quantidade máxima de caracteres de uma string, o +2 é referente ao \n e \0.
 
@@ -12,9 +13,28 @@ typedef struct {
     int pontuacao;
 } Jogador;
 
+// Função para calcular a largura do terminal
+int fLarguraDoTerminal(){
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    int cols;
+
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+    cols = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+
+    return cols;
+}
+
 // Função para desenhar uma letra na tela
 void fDesenharLetra(const char *str) {
+    int larguraDaLetra = 5 + 2;
+    int larguraTotalDaMatriz = strlen(str) * larguraDaLetra;
+    //Cálculo para saber a quantidade de espaços em branco necessários para centralizar a matriz
+    int espacosEmBranco = (fLarguraDoTerminal() - larguraTotalDaMatriz) / 2;
+    
     for (int i = 0; i < 5; i++) {
+        for(int esp = 0; esp < espacosEmBranco; esp++){
+            printf(" ");
+        }
         const char *aux = str;
         while (*aux) {
             char letra = *aux;
@@ -436,7 +456,8 @@ void iniciarJogo(Jogador *jogador){
 
 int main() {
     const char *arquivo = "database.dat";
-    unsigned int escolhaJogador, aux = 0;
+    unsigned int aux = 0;
+    char escolhaJogador;
     unsigned short int continuarMenu = 1; // continuarMenu inicia como "verdadeiro"
     fDesenharLetra("TERMO");
     Jogador jogador;
@@ -451,25 +472,23 @@ int main() {
         printf("[2] Como Jogar\n");
         printf("[3] Ranking\n");
         printf("[4] Sair\n\n");
-        printf("R: ");
-        scanf("%d", &escolhaJogador);
-        getchar();
+        escolhaJogador = getch();
 
         switch(escolhaJogador){
-            case 1:
+            case '1':
                 system("CLS");
                 printf("Digite seu nome: ");
                 fAdjustString(jogador.nome);
                 iniciarJogo(&jogador);
                 continuarMenu = 1;
                 break;
-            case 2:
+            case '2':
                 fComoJogar(); 
                 break;
-            case 3:
+            case '3':
                 fCarregarJogadores(arquivo);
                 break;
-            case 4:
+            case '4':
                 printf("Saindo...\n");
                 exit(0);
                 break;
