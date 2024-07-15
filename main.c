@@ -238,18 +238,9 @@ void fPrintTentativas(unsigned short int *tentativasRestantesDoPlayer, unsigned 
 }
 
 //Função que conta automaticamente a quantidade de palavras na listaNormal, sem a necessidade de intervenção do programador
-int fContlistaNormal(char **listaNormal){
+int fContLista(char **lista){
     int cont = 0;
-    for(int i = 0; listaNormal[i] != NULL; i++){
-        cont++;
-    }
-    return cont;
-}
-
-//Função que conta automaticamente a quantidade de palavras na listaDesafiador, sem a necessidade de intervenção do programador
-int fContlistaDesafiador(char **listaDesafiador){
-    int cont = 0;
-    for(int i = 0; listaDesafiador[i] != NULL; i++){
+    for(int i = 0; lista[i] != NULL; i++){
         cont++;
     }
     return cont;
@@ -260,6 +251,7 @@ void fComoJogar(){
     fDesenharLetra("COMO JOGAR Q");
     printf("\n\n- O jogo seleciona aleatoriamente uma palavra secreta de uma lista pre-definida para o jogador advinhar\n");
     printf("- Voce tem um numero limitado de tentativas (6) para adivinhar a palavra\n");
+    printf("- Seu palpite deve ter a mesma quantidade de letras que a palavra sorteada\n");
     printf("- Se voce adivinhar uma letra corretamente, essa letra sera revelada na palavra\n");
     printf("- As letras corretas e incorretas sao registradas e mostradas na tela\n");
     printf("- Voce ganha pontos com base no numero de tentativas restantes ao adivinhar a palavra corretamente\n");
@@ -270,8 +262,8 @@ void iniciarJogo(Jogador *jogador){
     srand(time(NULL));
     const char *arquivo = "database.dat";
     unsigned short int FimDoJogo = 0; //FimDoJogo recebe inicialmente "falso"
-    unsigned short int listaNormalTamanho = fContlistaNormal(listaNormal);
-    unsigned short int listaDesafiadorTamanho = fContlistaDesafiador(listaDesafiador);
+    unsigned short int listaNormalTamanho = fContLista(listaNormal);
+    unsigned short int listaDesafiadorTamanho = fContLista(listaDesafiador);
     unsigned short int tentativasTotais, tentativasRestantesDoPlayer;
     unsigned short int tamanhoDaPalavraSorteada = 0;
     unsigned int dificuldade;
@@ -285,6 +277,7 @@ void iniciarJogo(Jogador *jogador){
     unsigned short int auxLetrasIncorretas;
     unsigned int scoreTotal = 0;
     unsigned int scorePorTentativa = 20; // Se houver necessidade de mudar a quantidade de pontos por tentativa
+    unsigned int scoreMaximoAtingido = 0;
     unsigned short int vitorias = 0;
     // Variáveis para o temporizador
     time_t inicioDoTemporizador, tempoDecorrido;
@@ -327,7 +320,7 @@ void iniciarJogo(Jogador *jogador){
         tentativasTotais = 6; // Se quiser alterar o número de tentativas total é nesta parte
         tentativasRestantesDoPlayer = tentativasTotais;
 
-        // É nesta parte do código que a palavra será sorteada
+        // É nesta parte do código que a palavra será sorteada, dependendo da dificuldade escolhida
         if(dificuldade == 1){
             strcpy(palavraSorteada, listaNormal[rand() % listaNormalTamanho]);
         }
@@ -350,7 +343,6 @@ void iniciarJogo(Jogador *jogador){
             minutos = (segundos%3600)/60;
             segundos = segundos%60;
 
-            fPrintTentativas(&tentativasRestantesDoPlayer, &tentativasTotais);
 
             for(int j = 0; palavraSorteada[j] != '\0'; j++){
                 if(RespostaDoJogador[j] == palavraSorteada[j]){
@@ -371,19 +363,21 @@ void iniciarJogo(Jogador *jogador){
                     auxLetrasIncorretas += 2;
                 }
             }
+            do{
+                system("CLS");
+                fPrintTentativas(&tentativasRestantesDoPlayer, &tentativasTotais);
+                printf("A palavra tem %d letras\n\n", tamanhoDaPalavraSorteada);
+                printf("%s", palavraSorteadaMontagem);
+                printf("\n\nLetras corretas: %s\n", letrasCorretasDoJogador);
+                printf("Letras incorretas: %s", letrasIncorretasDoJogador);
+
+                // Local onde o usuário digitará seu palpite
+                printf("\n\nSua resposta deve ter a mesma quantidade de letras ");
+                printf("\nSeu palpite: ");
+                fAdjustString(RespostaDoJogador);
+
+            }while(strlen(RespostaDoJogador) != tamanhoDaPalavraSorteada);
             
-            printf("A palavra tem %d letras\n\n", tamanhoDaPalavraSorteada);
-
-            printf("%s", palavraSorteadaMontagem);
-
-            printf("\n\nLetras corretas: %s\n", letrasCorretasDoJogador);
-
-            printf("Letras incorretas: %s", letrasIncorretasDoJogador);
-
-            // Local onde o usuário digitará seu palpite
-            printf("\n\nSua resposta: ");
-            fAdjustString(RespostaDoJogador);
-
             system("CLS");
 
             // Verificando se a resposta do jogador é igual à palavra sorteada
@@ -392,6 +386,8 @@ void iniciarJogo(Jogador *jogador){
                 printf("A palavra era: %s\n\n", palavraSorteada);
                 printf("Ganhou %d pontos!\n\n", tentativasRestantesDoPlayer * scorePorTentativa);
                 scoreTotal += tentativasRestantesDoPlayer * scorePorTentativa;
+                if(scoreTotal > scoreMaximoAtingido)
+                    scoreMaximoAtingido = scoreTotal;
                 printf("Seu score no momento: %d\n\n", scoreTotal);
                 vitorias++;
                 printf("Sequencia de vitorias: %d\n\n", vitorias);
@@ -404,7 +400,8 @@ void iniciarJogo(Jogador *jogador){
             if(tentativasRestantesDoPlayer == 0){
                 printf("Perdeu! Usou todas as suas tentativas!\n");
                 printf("A palavra era: %s\n\n", palavraSorteada);
-                printf("Seu score total foi: %d\n\n", scoreTotal);
+                printf("Seu score total nesta rodada foi: %d\n\n", scoreTotal);
+                printf("Seu score recorde foi: %d\n\n", scoreMaximoAtingido);
                 printf("Sequencia de vitorias: %d\n\n", vitorias);
                 printf("Duracao da partida: %02d:%02d:%02d\n\n", horas, minutos, segundos);
                 vitorias = 0; // O jogador perde a sequência de vitórias que havia conseguido
@@ -415,15 +412,15 @@ void iniciarJogo(Jogador *jogador){
         }while(tentativasRestantesDoPlayer > 0);
 
         do{
-            printf("Deseja continuar?\n [S] ou [N]: ");
+            printf("Deseja continuar?\n[S] ou [N]: ");
             fAdjustString(continuarJogo);
             if(continuarJogo[0] == 'N'){
+                jogador->pontuacao = scoreMaximoAtingido;
                 FimDoJogo = 1; // Fim do jogo recebe verdadeiro
-                jogador->pontuacao = scoreTotal;
                 break;
             }
             else if(continuarJogo[0] == 'S'){
-                printf("Deseja mudar a dificuldade?\n [S] ou [N]: \n");
+                printf("Deseja mudar a dificuldade?\n[S] ou [N]: \n");
                 fAdjustString(continuarJogo);
                 if(continuarJogo[0] == 'S'){
                     printf("Digite a dificuldade que deseja alterar\n");
