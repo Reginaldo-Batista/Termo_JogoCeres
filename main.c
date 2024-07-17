@@ -276,7 +276,8 @@ void iniciarJogo(Jogador *jogador){
     unsigned short int auxLetrasCorretas;
     unsigned short int auxLetrasIncorretas;
     unsigned int scoreTotal = 0;
-    unsigned int scorePorTentativa = 20; // Se houver necessidade de mudar a quantidade de pontos por tentativa
+    unsigned int scoreNormalPorTentativa = 20; // Se houver necessidade de mudar a quantidade de pontos por tentativa
+    unsigned int scoreDesafiadorPorTentativa = 40; // Se houver necessidade de mudar a quantidade de pontos por tentativa
     unsigned int scoreMaximoAtingido = 0;
     unsigned short int vitorias = 0;
     // Variáveis para o temporizador
@@ -384,11 +385,30 @@ void iniciarJogo(Jogador *jogador){
             if(strcmp(palavraSorteada, RespostaDoJogador) == 0){
                 printf("Parabens, voce acertou!\n");
                 printf("A palavra era: %s\n\n", palavraSorteada);
-                printf("Ganhou %d pontos!\n\n", tentativasRestantesDoPlayer * scorePorTentativa);
-                scoreTotal += tentativasRestantesDoPlayer * scorePorTentativa;
+
+                //Atribuindo pontos para a dificuldade normal
+                if(dificuldade == 1){
+                    printf("Ganhou %d pontos!\n", tentativasRestantesDoPlayer * scoreNormalPorTentativa);
+                    scoreTotal += tentativasRestantesDoPlayer * scoreNormalPorTentativa;
+                    if(vitorias != 0){
+                        printf("Ganhou +%.0lf pontos devido as %d vitorias anteriores!\n", ((double) vitorias / 100) * scoreTotal, vitorias);
+                    }
+                    scoreTotal += ((double) vitorias / 100) * scoreTotal;
+                }
+
+                //Atribuindo pontos para a dificuldade desafiadora
+                else if(dificuldade == 2){
+                    printf("Ganhou %d pontos!\n", tentativasRestantesDoPlayer * scoreDesafiadorPorTentativa);
+                    scoreTotal += tentativasRestantesDoPlayer * scoreDesafiadorPorTentativa;
+                    if(vitorias != 0){
+                        printf("Ganhou +%.0lf pontos devido as %d vitorias anteriores!\n", ((double) vitorias / 100) * scoreTotal, vitorias);
+                    }
+                    scoreTotal += ((double) vitorias / 100) * scoreTotal;
+                }
+
                 if(scoreTotal > scoreMaximoAtingido)
                     scoreMaximoAtingido = scoreTotal;
-                printf("Seu score no momento: %d\n\n", scoreTotal);
+                printf("\nSeu score no momento: %d\n", scoreTotal);
                 vitorias++;
                 printf("Sequencia de vitorias: %d\n\n", vitorias);
                 printf("Duracao da partida: %02d:%02d:%02d\n\n", horas, minutos, segundos);
